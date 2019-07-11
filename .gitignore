@@ -1,0 +1,11 @@
+*.snakemake*
+*datasets*
+tests/pseudo_mapping/
+tests/qc/
+tests/raw_data/
+tests/logs/
+tests/aggregated_salmon_counts/
+tests/report.html
+tests/*.png
+tests/*.html
+tests/*.stats*

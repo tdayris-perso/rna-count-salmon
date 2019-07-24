@@ -18,10 +18,10 @@ rule multiqc:
     threads: 1
     resources:
         mem_mb = (
-            lambda wildcards, attempt: min(attempt * 256, 768)
+            lambda wildcards, attempt: min(attempt * 2048, 10240)
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 10, 60)
+            lambda wildcards, attempt: min(attempt * 45, 120)
         )
     version: "1.0"
     log:

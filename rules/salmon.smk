@@ -7,7 +7,7 @@ https://snakemake-wrappers.readthedocs.io/en/stable/wrappers/salmon/index.html
 """
 rule salmon_index:
     input:
-        **refs_pack_dict
+        refs_pack_dict['fasta']
     output:
         index = directory("salmon_index/genome_index")
     message:
@@ -17,7 +17,7 @@ rule salmon_index:
             lambda wildcards, attempt: min(attempt * 2048 + 10240, 35580)
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 15 + 15, 180)
+            lambda wildcards, attempt: min(attempt * 15 + 60, 180)
         )
     version: "1.0"
     threads:
@@ -52,7 +52,7 @@ rule salmon_quant:
             lambda wildcards, attempt: min(attempt * 5120 + 2048, 20480)
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 15 + 15, 180)
+            lambda wildcards, attempt: min(attempt * 15 + 75, 180)
         )
     version: "1.0"
     threads:

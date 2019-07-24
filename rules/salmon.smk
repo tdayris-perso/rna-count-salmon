@@ -7,7 +7,7 @@ https://snakemake-wrappers.readthedocs.io/en/stable/wrappers/salmon/index.html
 """
 rule salmon_index:
     input:
-        refs_pack_dict['fasta']
+        refs_pack_dict['ref']['fasta']
     output:
         index = directory("salmon_index/genome_index")
     message:

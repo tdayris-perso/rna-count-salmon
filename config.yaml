@@ -1,18 +1,19 @@
-design: design.tsv
-workdir: .
-threads: 1
-singularity_docker_image: docker://continuumio/miniconda3:4.4.10
 cold_storage:
-  - /media
+- ' '
+design: design.tsv
+params:
+  libType: ISF
+  salmon_index_extra: \-\-kmerLen 5
+  salmon_quant_extra: \-\-noBiasLengthThreshold \-\-minAssignedFrags 1 \-\-noEffectiveLengthCorrection
+    \-\-noLengthCorrection \-\-fasterMapping \-\-noFragLengthDist \-\-allowDovetail
+    \-\-numPreAuxModelSamples 0 \-\-numAuxModelSamples 0
 ref:
-  fasta: /path/to/genome/sequence.fa
-  gtf: /path/to/genome/annotaton.gtf
+  fasta: genome/transcriptome.fasta
+  gtf: null
+singularity_docker_image: docker://continuumio/miniconda3:4.4.10
+threads: 1
+workdir: .
 workflow:
+  aggregate: true
   fastqc: true
   multiqc: true
-  aggregate: true
-params:
-  copy_extra: "--parents --verbose"
-  salmon_index_extra: "--make-unique"
-  salmon_quant_extra: "--bias --bootstrap-samples=100"
-  libType: "A"

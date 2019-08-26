@@ -9,3 +9,5 @@ tests/report.html
 tests/*.png
 tests/*.html
 tests/*.stats*
+*/salmon_index/*
+*/genome/*

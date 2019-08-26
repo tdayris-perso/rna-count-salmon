@@ -12,6 +12,19 @@ pairs of fastq files that way.
 
 Finally, it writes these pairs, using the longest common substring as
 identifier. The written file is a TSV file.
+
+You can test this script with:
+pytest -v ./prepare_design.py
+
+Usage example:
+# Single ended reads example:
+python3.7 ./prepare_design.py ../tests/reads --single
+
+# Paired-end libary example:
+python3.7 ./prepare_design.py ../tests/reads
+
+# Search in sub-directories:
+python3.7 ./prepare_design.py ../tests --recursive
 """
 
 import argparse                      # Parse command line

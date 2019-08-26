@@ -9,5 +9,6 @@ tests/report.html
 tests/*.png
 tests/*.html
 tests/*.stats*
-*/salmon_index/*
-*/genome/*
+tests/salmon_index/
+tests/genome/
+*/__pycache__/*

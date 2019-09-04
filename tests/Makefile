@@ -9,6 +9,10 @@ TEST_AGGREGATION = ../scripts/aggregate_samples.py
 BASH             = bash
 TEST_PIPELINE    = test.sh
 
+# Conda
+CONDA            = conda
+ENV_YAML         = ../envs/workflow.yaml
+
 
 ### UNIT TESTS ###
 # Running all tests
@@ -30,7 +34,12 @@ alggregation-tests:
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
 ci-tests:
+	$(CONDA) activate
 	$(BASH) $(TEST_PIPELINE)
+
+# Environment building through conda
+conda-tests:
+	$(CONDA) env create --file $(ENV_YAML) --force
 
 ### Cleaning tests results ###
 clean:

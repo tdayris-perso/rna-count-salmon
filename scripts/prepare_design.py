@@ -27,16 +27,17 @@ python3.7 ./prepare_design.py ../tests/reads
 python3.7 ./prepare_design.py ../tests --recursive
 """
 
-import argparse                      # Parse command line
-import logging                       # Traces and loggings
-import logging.handlers              # Logging behaviour
-import os                            # OS related activities
-import pandas as pd                  # Parse TSV files
-from pathlib import Path             # Paths related methods
-import pytest                        # Unit testing
-import shlex                         # Lexical analysis
-import sys                           # System related methods
-from typing import Dict, Generator, List   # Type hints
+import argparse           # Parse command line
+import logging            # Traces and loggings
+import logging.handlers   # Logging behaviour
+import os                 # OS related activities
+import pandas as pd       # Parse TSV files
+import pytest             # Unit testing
+import shlex              # Lexical analysis
+import sys                # System related methods
+
+from pathlib import Path                        # Paths related methods
+from typing import Dict, Generator, List, Any   # Type hints
 
 logger = logging.getLogger(
     os.path.splitext(os.path.basename(sys.argv[0]))[0]
@@ -51,39 +52,6 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter,
     without breaking the classic argument formatting.
     """
     pass
-
-
-# Processing functions
-# Looking for fastq files
-def search_fq(fq_dir: Path,
-              recursive: bool = False) -> Generator[str, str, None]:
-    """
-    Iterate over a directory and search for fastq files
-    """
-    for path in fq_dir.iterdir():
-        if path.is_dir():
-            if recursive is True:
-                yield from search_fq(path, recursive)
-            else:
-                continue
-
-        if path.name.endswith(("fq", "fq.gz", "fastq", "fastq.gz")):
-            yield path
-
-
-# Testing search_fq
-def test_search_fq():
-    """
-    This function tests the ability of the function "search_fq" to find the
-    fastq files in the given directory
-    """
-    path = Path("../tests/reads/")
-    expected = list(
-        Path("../tests/reads/{}_R{}.fastq".format(sample, stream))
-        for sample in ["A", "B"]
-        for stream in [1, 2]
-    )
-    assert sorted(list(search_fq(path))) == sorted(expected)
 
 
 # Handling logging options
@@ -103,10 +71,87 @@ def setup_logging(args: argparse.ArgumentParser) -> None:
         root.addHandler(ch)
 
 
+# Processing functions
+# Looking for fastq files
+def search_fq(fq_dir: Path,
+              recursive: bool = False) -> Generator[str, str, None]:
+    """
+    Iterate over a directory and search for fastq files
+
+    Parameters:
+        fq_dir      Path        Path to the fastq directory in which to search
+        recursive   bool        A boolean, weather to search recursively in
+                                sub-directories (True) or not (False)
+
+    Return:
+                    Generator[str, str, None]       A Generator of paths
+
+    Example:
+    >>> search_fq(Path("../tests/reads/"))
+    <generator object search_fq at 0xXXXXXXXXXXXX>
+
+    >>> list(search_fq(Path("../tests/", True)))
+    [PosixPath('../tests/reads/A_R2.fastq'),
+     PosixPath('../tests/reads/B_R2.fastq'),
+     PosixPath('../tests/reads/A_R1.fastq'),
+     PosixPath('../tests/reads/B_R1.fastq')]
+    """
+    for path in fq_dir.iterdir():
+        if path.is_dir():
+            if recursive is True:
+                yield from search_fq(path, recursive)
+            else:
+                continue
+
+        if path.name.endswith((".fq", ".fq.gz", ".fastq", ".fastq.gz")):
+            yield path
+
+
+# Testing search_fq
+def test_search_fq():
+    """
+    This function tests the ability of the function "search_fq" to find the
+    fastq files in the given directory
+
+    Example:
+    pytest -v prepare_design.py -k test_search_fq
+    """
+    path = Path("../tests/reads/")
+    print(path)
+    expected = list(
+        path / "{}_R{}.fastq".format(sample, stream)
+        for sample in ["A", "B"]
+        for stream in [1, 2]
+    )
+    assert sorted(list(search_fq(path))) == sorted(expected)
+
+
 # Turning the FQ list into a dictionnary
 def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
     """
     Return a dictionnary with identified fastq files (paried or not)
+
+    Parameters:
+        fq_files    List[Path]      A list of paths to iterate over
+        paired      bool            A boolean, weather the dataset is
+                                    pair-ended (True) or single-ended (False)
+
+    Return:
+                    Dict[str, Path] A dictionnary: for each Sample ID, the ID
+                                    is repeated alongside with the upstream
+                                    /downstream fastq files.
+
+    Example:
+    # Paired-end single sample
+    >>> classify_fq([Path("file1.R1.fq"), Path("file1.R2.fq")], True)
+    {'file1.R1.fq': {'Downstream_file': PosixPath("/path/to/file1.R1.fq"),
+     'Sample_id': 'file1.R1',
+     'Upstream_file': PosixPath('/path/to/file1.R2.fq')}
+
+    # Single-ended single sample
+    >>> classify_fq([Path("file1.fq")], False)
+    {'file1.fq': {'Sample_id': 'file1',
+     'Upstream_file': PosixPath('/path/to/file1.fq')}}
     """
     fq_dict = {}
     if paired is not True:
@@ -126,15 +171,17 @@ def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
                 "Upstream_file": fq1.absolute(),
                 "Downstream_file": fq2.absolute()
             }
-    print(fq_dict)
+    logger.debug(fq_dict)
     return fq_dict
 
 
-# Testing the classification function
 def test_classify_fq():
     """
     This function takes input from the pytest decorator
     to test the classify_fq function
+
+    Example:
+    pytest -v ./prepare_design.py -k test_classify_fq
     """
     prefix = Path(__file__).parent.parent
     fq_list = sorted(list(search_fq(prefix / "tests" / "reads")))
@@ -158,14 +205,26 @@ def test_classify_fq():
 
 # Parsing command line arguments
 # This function won't be tested
-def parse_args(args: str = sys.argv[1:]) -> argparse.ArgumentParser:
+def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     """
-    Simply build a command line parser object
+    Build a command line parser object
+
+    Parameters:
+        args    Any                 Command line arguments
+
+    Return:
+                ArgumentParser      Parsed command line object
+
+    Example:
+    >>> parse_args(shlex.split("/path/to/fasta --single"))
+    Namespace(debug=False, output='design.tsv', path='/path/to/fasta',
+    quiet=False, recursive=False, single=True)
     """
     # Defining command line options
     main_parser = argparse.ArgumentParser(
-        description=sys.modules[__name__].__doc__,
-        formatter_class=CustomFormatter
+        # description=sys.modules[__name__].__doc__,
+        description="ok?"
+        # formatter_class=CustomFormatter
     )
 
     # Required arguments
@@ -212,13 +271,38 @@ def parse_args(args: str = sys.argv[1:]) -> argparse.ArgumentParser:
     )
 
     # Parsing command lines
-    return main_parser.parse_args()
+    return main_parser.parse_args(args)
 
 
-# Main function, the core of this programm
+def test_parse_args() -> None:
+    """
+    This function tests the command line parsing
+
+    Example:
+    >>> pytest -v prepare_config.py -k test_parse_args
+    """
+    options = parse_args(shlex.split("/path/to/fastq/dir/"))
+    expected = argparse.Namespace(
+        debug=False,
+        output='design.tsv',
+        path='/path/to/fastq/dir/',
+        quiet=False,
+        recursive=False,
+        single=False
+    )
+    assert options == expected
+
+
+# Main function, the core of this script
 def main(args: argparse.ArgumentParser) -> None:
     """
     This function performs the whole preparation sequence
+
+    Parameters:
+        args    ArgumentParser      The parsed command line
+
+    Example:
+    >>> main(parse_args(shlex.split("/path/to/fasta/dir/")))
     """
     # Searching for fastq files and sorting them alphabetically
     fq_files = sorted(list(search_fq(Path(args.path), args.recursive)))
@@ -237,10 +321,8 @@ def main(args: argparse.ArgumentParser) -> None:
 
 # Running programm if not imported
 if __name__ == '__main__':
+    # Parsing command line
     args = parse_args()
-    logger = logging.getLogger(
-        os.path.splitext(os.path.basename(sys.argv[0]))[0]
-    )
     setup_logging(args)
 
     try:

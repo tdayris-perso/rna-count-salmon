@@ -7,7 +7,7 @@ https://snakemake-wrappers.readthedocs.io/en/stable/wrappers/multiqc.html
 """
 rule multiqc:
     input:
-        **get_targets(no_multiqc=True)
+        **get_targets(no_multiqc=True, no_aggregation=True)
     output:
         report(
             "qc/multiqc_report.html",

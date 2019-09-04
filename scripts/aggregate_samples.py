@@ -258,7 +258,7 @@ if __name__ == '__main__':
 
     # Iterating through columns
     for column in ["NumReads", "TPM"]:
-        data = extract_field(
+        data = merge_reduced_frames(
             *snakemake.input["quants"],
             prefix="pseudo_mapping/",
             column=column

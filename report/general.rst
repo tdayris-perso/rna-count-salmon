@@ -6,6 +6,8 @@ Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_for
 * Salmon index optional arguments: `{{snakemake.config.params.salmon_index_extra}}`
 * Salmon quantification optional arguments: `{{snakemake.config.params.salmon_quant_extra}}`
 
+The whole pipeline was powered by both `Snakemake <https://snakemake.readthedocs.io>`_ , and `SnakemakeWrappers <https://snakemake-wrappers.readthedocs.io/>`_ .
+
 
 Citations:
 ##########
@@ -24,3 +26,9 @@ Salmon
   Patro, Rob, et al. “Salmon provides fast and bias-aware quantification of transcript expression.” Nature Methods (2017). Advanced Online Publication. doi: 10.1038/nmeth.4197.
 
   https://salmon.readthedocs.io/
+
+Snakemake
+  Köster, Johannes and Rahmann, Sven. “Snakemake - A scalable bioinformatics workflow engine”. Bioinformatics 2012.
+
+  https://snakemake.readthedocs.io/
+  https://snakemake-wrappers.readthedocs.io/

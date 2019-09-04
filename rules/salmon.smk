@@ -40,11 +40,7 @@ rule salmon_quant:
     input:
         unpack(fq_pairs_w)
     output:
-        quant = report(
-            "pseudo_mapping/{sample}/quant.sf",
-            caption="../report/salmon.transcripts.rst",
-            category="Sample Count"
-        )
+        quant = "pseudo_mapping/{sample}/quant.sf"
     message:
         "Quantifying {wildcards.sample} with Salmon"
     resources:
@@ -54,7 +50,7 @@ rule salmon_quant:
         time_min = (
             lambda wildcards, attempt: min(attempt * 15 + 75, 180)
         )
-    version: "1.0"
+    version: swv
     threads:
         min(config["threads"], 12)
     params:
@@ -64,3 +60,33 @@ rule salmon_quant:
         "logs/salmon/quant_{sample}.log"
     wrapper:
         f"{swv}/bio/salmon/quant"
+
+
+"""
+This rule solves the issue: Duplicate explicit target name: "quant.sf"
+within reporting
+"""
+rule salmon_quant_rename:
+    input:
+        "pseudo_mapping/{sample}/quant.sf"
+    output:
+        report(
+            "pseudo_mapping/{sample}/quant.{sample}.tsv",
+            caption="../report/salmon.transcripts.rst",
+            category="Sample Count"
+        )
+    message:
+        "Symbolic link for quantification of {wildcards.sample}"
+    threads:
+        1
+    resources:
+        mem_mb = (
+            lambda wildcards, attempt: min(attempt * 256 + 256, 1024)
+        ),
+        time_min = (
+            lambda wildcards, attempt: min(attempt * 3 + 7, 10)
+        )
+    version:
+        1
+    shell:
+        "ln -s ${{PWD}}/{input} ${{PWD}}/{output}"

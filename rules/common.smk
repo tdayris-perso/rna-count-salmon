@@ -13,7 +13,7 @@ import pandas as pd     # Deal with TSV files (design)
 import sys              # System related operations
 
 # Snakemake-Wrappers version
-swv = "0.35.1"
+swv = "0.37.1"
 # github prefix
 git = "https://bitbucket.org/tdayris/snakemake-wrappers/raw"
 
@@ -207,7 +207,8 @@ def salmon_quant_extra() -> str:
         return f"{config['params']['salmon_quant_extra']}"
 
 
-def get_targets(no_multiqc: bool = False) -> Dict[str, Any]:
+def get_targets(no_multiqc: bool = False,
+                no_aggregation: bool = False) -> Dict[str, Any]:
     """
     This function returns the targets of Snakemake
     following the requests from the user.
@@ -219,8 +220,10 @@ def get_targets(no_multiqc: bool = False) -> Dict[str, Any]:
             samples=fq_root_dict.keys(),
             ext=["html", "zip"]
         )
-    if config["workflow"]["multiqc"] is True and not no_multiqc:
+
+    if config["workflow"]["multiqc"] and not no_multiqc and not no_aggregation:
         targets["multiqc"] = "qc/multiqc_report.html"
+
     if config["workflow"]["aggregate"] is True:
         targets["aggregation"] = [
             "aggregated_salmon_counts/merged_NumReads.tsv",
@@ -228,7 +231,7 @@ def get_targets(no_multiqc: bool = False) -> Dict[str, Any]:
         ]
 
     targets["quant"] = expand(
-        "pseudo_mapping/{sample}/quant.sf",
+        "pseudo_mapping/{sample}/quant.{sample}.tsv",
         sample=sample_id_list
     )
     return targets

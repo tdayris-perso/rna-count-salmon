@@ -34,7 +34,6 @@ alggregation-tests:
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
 ci-tests:
-	$(CONDA) activate
 	$(BASH) $(TEST_PIPELINE)
 
 # Environment building through conda
@@ -43,4 +42,4 @@ conda-tests:
 
 ### Cleaning tests results ###
 clean:
-	rm -rf salmon_index/ qc/ raw_data/ pseudo_mapping/ logs/ genome aggregated_salmon_counts/ report.html config.yaml design.tsv
+	rm -rf .snakemake salmon_index/ qc/ raw_data/ pseudo_mapping/ logs/ genome aggregated_salmon_counts/ report.html config.yaml design.tsv

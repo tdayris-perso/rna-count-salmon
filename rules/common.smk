@@ -200,11 +200,11 @@ def salmon_quant_extra() -> str:
     """
     Return the corrected list of parameters for kallist quant
     """
+    base = config["params"].get("salmon_quant_extra", "")
     try:
-        return (f"{config['params']['salmon_quant_extra']} "
-                f"--gtf {str(config['gtf'])}")
+        return f"{base} --gtf {str(config['gtf'])}"
     except KeyError:
-        return f"{config['params']['salmon_quant_extra']}"
+        return base
 
 
 def get_targets(no_multiqc: bool = False,

@@ -23,7 +23,7 @@ rule salmon_index:
     threads:
         min(config["threads"], 12)
     params:
-        extra = config["params"]["salmon_index_extra"]
+        extra = config["params"].get("salmon_index_extra", "")
     log:
         "logs/salmon/index.log"
     wrapper:
@@ -54,7 +54,7 @@ rule salmon_quant:
     threads:
         min(config["threads"], 12)
     params:
-        libType = config["params"]["libType"],
+        libType = config["params"].get("libType", "A"),
         extra = salmon_quant_extra()
     log:
         "logs/salmon/quant_{sample}.log"

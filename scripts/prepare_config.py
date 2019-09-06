@@ -91,10 +91,10 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     threads=1, workdir='.')
     """
     main_parser = argparse.ArgumentParser(
-        description="Prepare config.yaml file for your Snakefile",
+        description=sys.modules[__name__].doc,
         formatter_class=CustomFormatter,
         epilog="This script does not make any magic. Please check the prepared"
-               " configuration file!",
+               " configuration file!"
     )
 
     # Parsing positional argument

@@ -222,9 +222,9 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     """
     # Defining command line options
     main_parser = argparse.ArgumentParser(
-        # description=sys.modules[__name__].__doc__,
-        description="ok?"
-        # formatter_class=CustomFormatter
+        description=sys.modules[__name__].__doc__,
+        formatter_class=CustomFormatter,
+        epilog="This script does not perform any magic. Check the result."
     )
 
     # Required arguments

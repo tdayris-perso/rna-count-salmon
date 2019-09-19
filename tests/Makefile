@@ -13,6 +13,7 @@ TEST_PIPELINE    = test.sh
 CONDA            = conda
 ENV_YAML         = ../envs/workflow.yaml
 
+default: all-unit-tests
 
 ### UNIT TESTS ###
 # Running all tests

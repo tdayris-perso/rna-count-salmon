@@ -6,6 +6,6 @@ python3.7 ../scripts/prepare_config.py genomes/transcriptome.fasta --salmon-inde
 
 python3.7 ../scripts/prepare_design.py reads/
 
-snakemake -s ../Snakefile --use-conda -j 4 --force
+snakemake -s ../Snakefile --use-conda -j 1 --force
 
-snakemake -s ../Snakefile --use-conda --report -j 4 --force
+snakemake -s ../Snakefile --use-conda --report -j 1 --force

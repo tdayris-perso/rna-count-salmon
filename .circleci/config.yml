@@ -13,15 +13,15 @@ jobs:
             git submodule update --remote
       - restore_cache:
           keys:
-            - snakemake-{{ checksum "~/rna-count-salmon/.circleci/setup.sh" }}
+            - snakemake-{{ checksum "./setup.sh" }}
       - run:
           name: Update PATH
           command: "echo 'export PATH=${PWD}/miniconda/bin:${PATH}' >> ${BASH_ENV}"
       - run:
-          name: "Setup Conda"
-          command: bash ~/rna-count-salmon/.circleci/setup.sh
+          name: Setup Conda
+          command: bash ./setup.sh
       - save_cache:
-          key: snakemake-{{ checksum "~/rna-count-salmon/.circleci/setup.sh" }}
+          key: snakemake-{{ checksum "./setup.sh" }}
           paths:
             - miniconda
       - run:

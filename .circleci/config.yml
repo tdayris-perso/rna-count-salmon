@@ -27,7 +27,7 @@ jobs:
             conda config --add channels defaults
             conda config --add channels conda-forge
             conda config --add channels bioconda
-            conda env create --file ../config/environment.yaml
+            conda env create --file ../envs/workflow.yaml
       - save_cache:
           key: snakemake-{{ checksum ".circleci/setup.sh" }}
           paths:

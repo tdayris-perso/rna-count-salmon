@@ -7,38 +7,38 @@ jobs:
     steps:
       - checkout
       - run:
-        name: "Pull Submodules"
-        command: |
-          git submodule init
-          git submodule update --remote
+          name: "Pull Submodules"
+          command: |
+            git submodule init
+            git submodule update --remote
       - restore_cache:
-        keys:
-          - snakemake-{{ checsum ".circleci/setup.sh" }}
+          keys:
+            - snakemake-{{ checsum ".circleci/setup.sh" }}
       - run:
-        name: Update PATH
-        command: "echo 'export PATH=${PWD}/miniconda/bin:${PATH}' >> ${BASH_ENV}"
+          name: Update PATH
+          command: "echo 'export PATH=${PWD}/miniconda/bin:${PATH}' >> ${BASH_ENV}"
       - run:
-        name: "Setup Conda"
-        command: |
-          SINGULARITY_VER=2.4.5
-          if type conda > /dev/null; then exit 0; fi
-          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          bash miniconda.sh -b -p miniconda
-          conda config --add channels defaults
-          conda config --add channels conda-forge
-          conda config --add channels bioconda
-          conda env create --file ../config/environment.yaml
+          name: "Setup Conda"
+          command: |
+            SINGULARITY_VER=2.4.5
+            if type conda > /dev/null; then exit 0; fi
+            wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+            bash miniconda.sh -b -p miniconda
+            conda config --add channels defaults
+            conda config --add channels conda-forge
+            conda config --add channels bioconda
+            conda env create --file ../config/environment.yaml
       - save_cache:
-        key: snakemake-{{ checsum ".circleci/setup.sh" }}
-        paths:
-          - miniconda
+          key: snakemake-{{ checsum ".circleci/setup.sh" }}
+          paths:
+            - miniconda
       - run:
-        name: Run Unit testing
-        command: |
-          source activate rna-count-salmon
-          make all-unit-tests
+          name: Run Unit testing
+          command: |
+            source activate rna-count-salmon
+            make all-unit-tests
       - run:
-        name: Run System testing
-        command: |
-          source activate rna-count-salmon
-          make ci-tests
+          name: Run System testing
+          command: |
+            source activate rna-count-salmon
+            make ci-tests

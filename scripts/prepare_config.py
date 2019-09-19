@@ -72,7 +72,7 @@ def setup_logging(args: argparse.ArgumentParser) -> None:
 # Argument parsing functions
 def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     """
-    This function builds an object object to parse command line arguments
+    This function parses command line arguments
 
     Parameters
         args     Any             All command line arguments
@@ -91,7 +91,7 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     threads=1, workdir='.')
     """
     main_parser = argparse.ArgumentParser(
-        description=sys.modules[__name__].doc,
+        description=sys.modules[__name__].__doc__,
         formatter_class=CustomFormatter,
         epilog="This script does not make any magic. Please check the prepared"
                " configuration file!"

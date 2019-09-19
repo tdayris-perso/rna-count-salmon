@@ -5,7 +5,7 @@ jobs:
     # machine: ubuntu-1604:201903-01
     working_directory: ~/rna-count-salmon/tests
     steps:
-      - chechout
+      - checkout
       - run:
         name: "Pull Submodules"
         command: |

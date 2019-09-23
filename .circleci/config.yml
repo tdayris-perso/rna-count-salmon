@@ -30,7 +30,9 @@ jobs:
 
       - run:
           name: Run Unit testing
-          command: make all-unit-tests
+          command: |
+            source activate rna-count-salmon
+            pytest -v scripts/prepare_config.py scripts/prepare_design.py scripts/aggregate_samples.py
 
       - run:
           name: Run System testing

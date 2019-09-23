@@ -5,6 +5,15 @@ jobs:
     # machine: ubuntu-1604:201903-01
     steps:
       - checkout
+      - run:
+          name: "Pull Submodules"
+          command: |
+            git submodule init
+            git submodule update --remote
+
+      - run:
+          name: Update PATH
+          command: "echo 'export PATH=${PWD}/miniconda/bin:${PATH}' >> ${BASH_ENV}"
 
       - run:
           name: Setup Conda

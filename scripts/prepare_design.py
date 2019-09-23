@@ -18,13 +18,13 @@ pytest -v ./prepare_design.py
 
 Usage example:
 # Single ended reads example:
-python3.7 ./prepare_design.py ../tests/reads --single
+python3.7 ./prepare_design.py tests/reads --single
 
 # Paired-end libary example:
-python3.7 ./prepare_design.py ../tests/reads
+python3.7 ./prepare_design.py tests/reads
 
 # Search in sub-directories:
-python3.7 ./prepare_design.py ../tests --recursive
+python3.7 ./prepare_design.py tests --recursive
 """
 
 import argparse           # Parse command line
@@ -87,14 +87,14 @@ def search_fq(fq_dir: Path,
                     Generator[str, str, None]       A Generator of paths
 
     Example:
-    >>> search_fq(Path("../tests/reads/"))
+    >>> search_fq(Path("tests/reads/"))
     <generator object search_fq at 0xXXXXXXXXXXXX>
 
-    >>> list(search_fq(Path("../tests/", True)))
-    [PosixPath('../tests/reads/A_R2.fastq'),
-     PosixPath('../tests/reads/B_R2.fastq'),
-     PosixPath('../tests/reads/A_R1.fastq'),
-     PosixPath('../tests/reads/B_R1.fastq')]
+    >>> list(search_fq(Path("tests/", True)))
+    [PosixPath('tests/reads/A_R2.fastq'),
+     PosixPath('tests/reads/B_R2.fastq'),
+     PosixPath('tests/reads/A_R1.fastq'),
+     PosixPath('tests/reads/B_R1.fastq')]
     """
     for path in fq_dir.iterdir():
         if path.is_dir():
@@ -116,7 +116,7 @@ def test_search_fq():
     Example:
     pytest -v prepare_design.py -k test_search_fq
     """
-    path = Path("../tests/reads/")
+    path = Path("tests/reads/")
     print(path)
     expected = list(
         path / "{}_R{}.fastq".format(sample, stream)

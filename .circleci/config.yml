@@ -3,7 +3,6 @@ jobs:
   build:
     machine: true
     # machine: ubuntu-1604:201903-01
-    working_directory: ~/rna-count-salmon/tests
     steps:
       - checkout
       - run:
@@ -14,7 +13,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - snakemake-{{ checksum "~/.circleci/setup.sh" }}
+            - snakemake-{{ checksum .circleci/setup.sh }}
 
       - run:
           name: Update PATH
@@ -22,21 +21,17 @@ jobs:
 
       - run:
           name: Setup Conda
-          command: bash ~/.circleci/setup.sh
+          command: make conda-tests
 
       - save_cache:
-          key: snakemake-{{ checksum "~/.circleci/setup.sh" }}
+          key: snakemake-{{ checksum .circleci/setup.sh }}
           paths:
             - miniconda
 
       - run:
           name: Run Unit testing
-          command: |
-            source activate rna-count-salmon
-            make all-unit-tests
+          command: male all-unit-tests
 
       - run:
           name: Run System testing
-          command: |
-            source activate rna-count-salmon
-            make ci-tests
+          command: make ci-tests

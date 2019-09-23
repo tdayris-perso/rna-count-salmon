@@ -63,7 +63,7 @@ def read_salmon(path: str) -> pd.DataFrame:
                 DataFrame   A DataFrame containing the whole file
 
     Example:
-    >>> read_salmon(Path("../tests/salmon_example/quant.sf"))
+    >>> read_salmon(Path("tests/salmon_example/quant.sf"))
     """
     return pd.read_csv(
         path,
@@ -87,7 +87,7 @@ def test_read_salmon() -> None:
     Example:
     pytest -v aggregata_samples.py -k test_read_salmon
     """
-    test = read_salmon(Path("../tests/salmon_example/quant.2.sf")).sort_index()
+    test = read_salmon(Path("tests/salmon_example/quant.2.sf")).sort_index()
     expected = pd.DataFrame({
         'Length': {
             'ENST00000387460.2': 66.0,
@@ -243,9 +243,9 @@ def test_merge_reduced_frames() -> None:
     ).sort_index()
 
     got = merge_reduced_frames(
-        "../tests/salmon_example/quant.sf",
-        "../tests/salmon_example/quant.2.sf",
-        prefix="../tests/salmon_example/"
+        "tests/salmon_example/quant.sf",
+        "tests/salmon_example/quant.2.sf",
+        prefix="tests/salmon_example/"
     ).sort_index()
 
     assert all(got == expected)

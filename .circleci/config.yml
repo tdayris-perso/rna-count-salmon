@@ -21,7 +21,7 @@ jobs:
 
       - run:
           name: Setup Conda
-          command: .circleci/setup.sh
+          command: bash .circleci/setup.sh
 
       - save_cache:
           key: snakemake-{{ checksum .circleci/setup.sh }}

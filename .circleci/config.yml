@@ -38,7 +38,7 @@ jobs:
           name: Run System testing
           command: |
             source activate rna-count-salmon
-            python3.7 $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
-            python3.7 $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra ' --kmerLen 5 ' --salmon-quant-extra ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples 0 --numAuxModelSamples 0 ' --aggregate --libType "ISF" --workdir tests -o tests/config.yaml -d tests/design.tsv
+            python3.7 scripts/prepare_design.py reads/ -o tests/design.tsv
+            python3.7 scripts/prepare_config.py genomes/transcriptome.fasta --salmon-index-extra ' --kmerLen 5 ' --salmon-quant-extra ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples 0 --numAuxModelSamples 0 ' --aggregate --libType "ISF" --workdir tests -o tests/config.yaml -d tests/design.tsv
             snakemake -s Snakefile --use-conda -j 1 --force
             snakemake -s Snakefile --use-conda -j 1 --report

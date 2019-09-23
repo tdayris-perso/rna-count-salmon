@@ -13,7 +13,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - snakemake-{{ checksum .circleci/setup.sh }}
+            - snakemake-{{ checksum ".circleci/setup.sh" }}
 
       - run:
           name: Update PATH
@@ -24,7 +24,7 @@ jobs:
           command: bash .circleci/setup.sh
 
       - save_cache:
-          key: snakemake-{{ checksum .circleci/setup.sh }}
+          key: snakemake-{{ checksum ".circleci/setup.sh" }}
           paths:
             - miniconda
 

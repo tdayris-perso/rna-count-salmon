@@ -1,5 +1,0 @@
-[
-  "scripts/prepare_design.py::test_search_fq",
-  "scripts/prepare_design.py::test_classify_fq",
-  "scripts/prepare_design.py::test_parse_args"
-]

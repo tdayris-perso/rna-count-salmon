@@ -12,3 +12,4 @@ tests/*.stats*
 tests/salmon_index/
 tests/genome/
 */__pycache__/*
+.circleci/.pytest_cache

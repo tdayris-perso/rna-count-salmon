@@ -1,10 +1,11 @@
 ### Variables ###
 # Tools
 PYTEST           = pytest
-BASH             = /bin/bash
+BASH             = bash
 CONDA            = conda
 PYTHON           = python3.7
 SNAKEMAKE        = snakemake
+CONDA_ACTIVATE   = source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate ; conda activate
 
 # Paths
 TEST_CONFIG      = scripts/prepare_config.py
@@ -26,37 +27,36 @@ default: all-unit-tests
 
 ### UNIT TESTS ###
 # Running all tests
-all-unit-tests: SHELL:=$(BASH)
+all-unit-tests: SHELL:=$(BASH) -i
 all-unit-tests:
-	"$([ -n "$CONDA_EXE" ] && echo "$CONDA_EXE" || which conda)" info
-	$(CONDA) activate $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTEST) -v $(TEST_CONFIG) $(TEST_DESIGN) $(TEST_AGGREGATION)
 
 # Running tests on configuration only
 config-tests: SHELL:=$(BASH) -i
 config-tests:
-	$(CONDA) activate $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTEST) -v $(TEST_CONFIG)
 	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -o tests/config.yaml
 
 # Running tests on design only
 design-tests: SHELL:=$(BASH) -i
 design-tests:
-	$(CONDA) activate $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTEST) -v $(TEST_DESIGN)
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
 
 # Running tests on aggregation only
 aggregation-tests: SHELL:=$(BASH) -i
 aggregation-tests:
-	$(CONDA) activate $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTEST) -v $(TEST_AGGREGATION)
 
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
 ci-tests: SHELL:=$(BASH) -i
 ci-tests:
-	$(CONDA) activate $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
 	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -o tests/config.yaml -d tests/design.tsv
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force
@@ -65,6 +65,7 @@ ci-tests:
 # Environment building through conda
 conda-tests: SHELL:=$(BASH) -i
 conda-tests:
+	$(CONDA_ACTIVATE) base
 	$(CONDA) env create --file $(ENV_YAML) --force
 	$(CONDA) activate $(ENV_NAME)
 

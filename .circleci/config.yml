@@ -30,7 +30,7 @@ jobs:
 
       - run:
           name: Run Unit testing
-          command: male all-unit-tests
+          command: make all-unit-tests
 
       - run:
           name: Run System testing

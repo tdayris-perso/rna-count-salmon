@@ -14,7 +14,7 @@ TEST_AGGREGATION = scripts/aggregate_samples.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
 TRANSCRIPT_PATH  = genomes/transcriptome.fasta
-READS_PATH       = reads/
+READS_PATH       = tests/reads/
 
 # Arguments
 ENV_NAME         = rna-count-salmon
@@ -58,7 +58,7 @@ ci-tests: SHELL:=$(BASH) -i
 ci-tests:
 	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
-	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -o tests/config.yaml -d tests/design.tsv
+	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -w tests -d tests/design.tsv
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --report
 

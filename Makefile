@@ -26,9 +26,10 @@ default: all-unit-tests
 
 ### UNIT TESTS ###
 # Running all tests
-all-unit-tests: SHELL:=$(BASH) -i
+all-unit-tests: SHELL:=$(BASH)
 all-unit-tests:
-	$(CONDA) activate $(ENV_NAME) || source activate $(ENV_NAME)
+	"$([ -n "$CONDA_EXE" ] && echo "$CONDA_EXE" || which conda)" info
+	$(CONDA) activate $(ENV_NAME)
 	$(PYTEST) -v $(TEST_CONFIG) $(TEST_DESIGN) $(TEST_AGGREGATION)
 
 # Running tests on configuration only

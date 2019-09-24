@@ -4,4 +4,4 @@ This is the [Snakemake](https://academic.oup.com/bioinformatics/article/28/19/25
 
 Each tool belong to their respective authors.
 
-See the [wiki](https://github.com/gustaveroussy/rna-count-salmon/wiki) for more information.
+See the [wiki](https://bitbucket.org/tdayris/rna-count-salmon/wiki/Home) for more information.

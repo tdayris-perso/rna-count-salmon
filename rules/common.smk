@@ -226,9 +226,17 @@ def get_targets(no_multiqc: bool = False,
 
     if config["workflow"]["aggregate"] is True:
         targets["aggregation"] = [
-            "aggregated_salmon_counts/merged_NumReads.tsv",
-            "aggregated_salmon_counts/merged_TPM.tsv"
+            "aggregated_salmon_counts/NumReads_transcripts.tsv",
+            "aggregated_salmon_counts/TPM_transcripts.tsv"
         ]
+        try:
+            if config["ref"]["gtf"] != "":
+                targets["aggregation"] += [
+                    "aggregated_salmon_counts/NumReads_genes.tsv",
+                    "aggregated_salmon_counts/TPM_genes.tsv"
+                ]
+        except KeyError:
+            pass
 
     targets["quant"] = expand(
         "pseudo_mapping/{sample}/quant.{sample}.tsv",

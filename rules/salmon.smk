@@ -40,7 +40,7 @@ rule salmon_quant:
     input:
         unpack(fq_pairs_w)
     output:
-        quant = "pseudo_mapping/{sample}/quant.sf"
+        **salmon_quant_output()
     message:
         "Quantifying {wildcards.sample} with Salmon"
     resources:

@@ -29,46 +29,46 @@ default: all-unit-tests
 # Environment building through conda
 conda-tests: SHELL:=$(BASH) -i
 conda-tests:
-	$(CONDA_ACTIVATE) base
-	$(CONDA) env create --file $(ENV_YAML) --force
+	$(CONDA_ACTIVATE) base && \
+	$(CONDA) env create --file $(ENV_YAML) --force && \
 	$(CONDA) activate $(ENV_NAME)
 
 ### UNIT TESTS ###
 # Running all tests
 all-unit-tests: SHELL:=$(BASH) -i
-all-unit-tests: conda-tests
-	$(CONDA_ACTIVATE) $(ENV_NAME)
+all-unit-tests:
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTEST) -v $(TEST_CONFIG) $(TEST_DESIGN) $(TEST_AGGREGATION)
 
 # Running tests on configuration only
 config-tests: SHELL:=$(BASH) -i
 config-tests:
-	$(CONDA_ACTIVATE) $(ENV_NAME)
-	$(PYTEST) -v $(TEST_CONFIG)
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
+	$(PYTEST) -v $(TEST_CONFIG) && \
 	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -o tests/config.yaml
 
 # Running tests on design only
 design-tests: SHELL:=$(BASH) -i
 design-tests:
-	$(CONDA_ACTIVATE) $(ENV_NAME)
-	$(PYTEST) -v $(TEST_DESIGN)
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
+	$(PYTEST) -v $(TEST_DESIGN) && \
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
 
 # Running tests on aggregation only
 aggregation-tests: SHELL:=$(BASH) -i
 aggregation-tests:
-	$(CONDA_ACTIVATE) $(ENV_NAME)
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTEST) -v $(TEST_AGGREGATION)
 
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
 ci-tests: SHELL:=$(BASH) -i
 ci-tests:
-	$(CONDA_ACTIVATE) $(ENV_NAME)
-	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
-	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -w tests -d tests/design.tsv --threads $(SNAKE_THREADS)
-	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force
-	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --report
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
+	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o ${PWD}/tests/design.tsv --debug && \
+	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads $(SNAKE_THREADS) --debug && \
+	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force --printshellcmds --reason --directory ${PWD}/tests && \
+	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --directory ${PWD}/tests --report
 
 
 

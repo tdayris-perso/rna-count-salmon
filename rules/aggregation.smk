@@ -20,7 +20,7 @@ rule aggregate_salmon_transcripts_counts:
             category="Aggregated Counts"
         )
     message:
-        "Aggregating all salmon abundancies"
+        "Aggregating all transcript abundancies"
     threads:
         1
     resources:
@@ -61,7 +61,7 @@ rule aggregate_salmon_gene_counts:
             category="Aggregated Counts"
         )
     message:
-        "Aggregating all salmon abundancies"
+        "Aggregating all genes abundancies"
     threads:
         1
     resources:

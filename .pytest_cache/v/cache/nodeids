@@ -1,0 +1,11 @@
+[
+  "scripts/prepare_config.py::test_parse_args",
+  "scripts/prepare_config.py::test_args_to_dict",
+  "scripts/prepare_config.py::test_dict_to_yaml",
+  "scripts/prepare_design.py::test_search_fq",
+  "scripts/prepare_design.py::test_classify_fq",
+  "scripts/prepare_design.py::test_parse_args",
+  "scripts/aggregate_samples.py::test_read_salmon",
+  "scripts/aggregate_samples.py::test_extract_field",
+  "scripts/aggregate_samples.py::test_merge_reduced_frames"
+]

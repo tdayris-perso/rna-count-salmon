@@ -202,8 +202,25 @@ def salmon_quant_extra() -> str:
     """
     base = config["params"].get("salmon_quant_extra", "")
     try:
-        return f"{base} --gtf {str(config['ref']['gtf'])}"
+        if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
+            base = f"{base} --geneMap {str(config['ref']['gtf'])}"
     except KeyError:
+        pass
+    finally:
+        return base
+
+
+def salmon_quant_output() -> str:
+    """
+    Return optionnal quant.genes if required by user
+    """
+    base = {"quant": "pseudo_mapping/{sample}/quant.sf"}
+    try:
+        if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
+            base["quant_genes"] = "pseudo_mapping/{sample}/quant.genes.sf"
+    except KeyError:
+        pass
+    finally:
         return base
 
 
@@ -230,7 +247,7 @@ def get_targets(no_multiqc: bool = False,
             "aggregated_salmon_counts/TPM_transcripts.tsv"
         ]
         try:
-            if config["ref"]["gtf"] != "":
+            if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
                 targets["aggregation"] += [
                     "aggregated_salmon_counts/NumReads_genes.tsv",
                     "aggregated_salmon_counts/TPM_genes.tsv"

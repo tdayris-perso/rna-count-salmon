@@ -1,0 +1,19 @@
+cold_storage:
+- ' '
+design: /home/tdayris/Documents/Developpement/BitBucket/rna-count-salmon/tests/design.tsv
+params:
+  libType: ISF
+  salmon_index_extra: ' --kmerLen 5 '
+  salmon_quant_extra: ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveLengthCorrection
+    --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples
+    0 --numAuxModelSamples 0 '
+ref:
+  fasta: genomes/transcriptome.fasta
+  gtf: null
+singularity_docker_image: docker://continuumio/miniconda3:4.4.10
+threads: 1
+workdir: /home/tdayris/Documents/Developpement/BitBucket/rna-count-salmon/tests
+workflow:
+  aggregate: true
+  fastqc: true
+  multiqc: true

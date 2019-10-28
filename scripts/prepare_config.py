@@ -14,13 +14,13 @@ pytest -v ./prepare_config.py
 
 Usage example:
 # Whole pipeline
-python3.7 /path/to/fasta_file.fa
+python3.7 ./prepare_config.py /path/to/fasta_file.fa
 
 # No quality controls, only quantification
-python3.7 /path/to/fasta_file.fa --no-fastqc --no-multiqc
+python3.7 ./prepare_config.py /path/to/fasta_file.fa --no-fastqc --no-multiqc
 
 # Whole pipeline, verbose mode activated
-python3.7 /path/to/fasta_file.fa -v
+python3.7 ./prepare_config.py /path/to/fasta_file.fa -v
 """
 
 

@@ -25,10 +25,18 @@ SAQUANT_ARGS     = ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveL
 # Recipes
 default: all-unit-tests
 
+
+# Environment building through conda
+conda-tests: SHELL:=$(BASH) -i
+conda-tests:
+	$(CONDA_ACTIVATE) base
+	$(CONDA) env create --file $(ENV_YAML) --force
+	$(CONDA) activate $(ENV_NAME)
+
 ### UNIT TESTS ###
 # Running all tests
 all-unit-tests: SHELL:=$(BASH) -i
-all-unit-tests:
+all-unit-tests: conda-tests
 	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTEST) -v $(TEST_CONFIG) $(TEST_DESIGN) $(TEST_AGGREGATION)
 
@@ -58,16 +66,11 @@ ci-tests: SHELL:=$(BASH) -i
 ci-tests:
 	$(CONDA_ACTIVATE) $(ENV_NAME)
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
-	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -w tests -d tests/design.tsv
+	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -w tests -d tests/design.tsv --threads $(SNAKE_THREADS)
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --report
 
-# Environment building through conda
-conda-tests: SHELL:=$(BASH) -i
-conda-tests:
-	$(CONDA_ACTIVATE) base
-	$(CONDA) env create --file $(ENV_YAML) --force
-	$(CONDA) activate $(ENV_NAME)
+
 
 ### Cleaning tests results ###
 clean:

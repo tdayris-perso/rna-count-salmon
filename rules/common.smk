@@ -202,7 +202,7 @@ def salmon_quant_extra() -> str:
     """
     base = config["params"].get("salmon_quant_extra", "")
     try:
-        return f"{base} --gtf {str(config['gtf'])}"
+        return f"{base} --gtf {str(config['ref']['gtf'])}"
     except KeyError:
         return base
 

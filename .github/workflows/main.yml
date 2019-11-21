@@ -23,7 +23,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Setup workflow environment
         run: make conda-tests
-      - uses: actions/checkout@v1
       - name: Scripts unit-testing
         run: make all-unit-tests
       - name: Run Wnakemake-workflow

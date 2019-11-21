@@ -8,6 +8,8 @@ Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_for
 
 The whole pipeline was powered by both `Snakemake <https://snakemake.readthedocs.io>`_ , and `SnakemakeWrappers <https://snakemake-wrappers.readthedocs.io/>`_ .
 
+If you need any other information, please read the `Frequently Asked questions <>`_ , then contact your bioinformatician if you're still in trouble.
+
 
 Citations:
 ##########

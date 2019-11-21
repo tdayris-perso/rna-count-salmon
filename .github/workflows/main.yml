@@ -19,6 +19,6 @@ jobs:
     - name: Setup workflow environment
       run: make conda-tests
     - name: Scripts unit-testing
-      run: make all-unit-testing
+      run: make all-unit-tests
     - name: Run Wnakemake-workflow
       run: make ci-tests

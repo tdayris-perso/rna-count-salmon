@@ -321,11 +321,11 @@ On most clusters, a difference is being made between repositories designed to IO
 
 Yet, copying all your fastq files at once before starting to work is time consuming and requires two copies of all your fastq files at the beginning of your work. Let Snakemake handle both copy creation and removal. This will save you time!
 
-# I have seen a typo/coding error. I am afraid of telling you.
+## I have seen a typo/coding error.
 
 You should not. I am very happy to improve myself, this code, and to help you get more confidence in yourself. You have found a mistake? Open an issue. CHEERS and THANK YOU!
 
-# I want to change/add/replace anything in your code. Can I?
+## I want to change/add/replace anything in your code. Can I?
 
 You can open an issue, or fork this git repository, and make your own path. You are likely to have very good reasons to do so. Who knows, maybe you'll make a pull request?
 

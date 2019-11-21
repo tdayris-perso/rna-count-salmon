@@ -74,4 +74,4 @@ ci-tests:
 
 ### Cleaning tests results ###
 clean:
-	rm -rf .snakemake salmon_index/ qc/ raw_data/ pseudo_mapping/ logs/ genome aggregated_salmon_counts/ report.html config.yaml design.tsv
+	rm -rf test/{.snakemake,logs,genome,aggregated_salmon_counts,pseudo_mapping,qc,raw_data,report.html}

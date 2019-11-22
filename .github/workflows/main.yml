@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   conda_setup:
     runs-on: ubuntu-latest
     steps:

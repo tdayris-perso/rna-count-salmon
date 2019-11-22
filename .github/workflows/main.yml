@@ -12,9 +12,8 @@ on:
 jobs:
   SonarCloud:
     runs-on: ubuntu-latest
-    steps:
-     - name: SonarCloud Scan
-     - uses: SonarSource/sonarcloud-github-action@v1.1:
+    name: SonarCloud Scan
+    uses: SonarSource/sonarcloud-github-action@v1.1:
   conda_setup:
     runs-on: ubuntu-latest
     steps:

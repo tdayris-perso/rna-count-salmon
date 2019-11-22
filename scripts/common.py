@@ -23,17 +23,24 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter,
 
 # Handling logging options
 # No tests for this function
-def setup_logging(logger: logging.Logger,
-                  args: argparse.ArgumentParser = None) -> None:
+def setup_logging(logger: str,
+                  args: argparse.ArgumentParser = None) -> logging.Logger:
     """
     Configure logging behaviour
     """
+    logger = logging.getLogger(logger)
     root = logging.getLogger("")
     root.setLevel(logging.WARNING)
-    logger.setLevel(args.debug and logging.DEBUG or logging.INFO)
+
+    if args is not None:
+        logger.setLevel(args.debug and logging.DEBUG or logging.INFO)
+    else:
+        logger.setLevel(logging.DEBUG or logging.INFO)
+
     if (args is None) or (args.quiet is False):
         ch = logging.StreamHandler()
         ch.setFormatter(logging.Formatter(
             "%(levelname)s [%(name)s]: %(message)s"
         ))
         root.addHandler(ch)
+    return logger

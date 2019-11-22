@@ -67,7 +67,7 @@ ci-tests:
 	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o ${PWD}/tests/design.tsv --debug && \
 	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads $(SNAKE_THREADS) --debug && \
-	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force --printshellcmds --reason --directory ${PWD}/tests && \
+	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --forceall --printshellcmds --reason --directory ${PWD}/tests && \
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --directory ${PWD}/tests --report
 
 

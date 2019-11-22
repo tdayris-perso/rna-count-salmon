@@ -31,7 +31,7 @@ from typing import List               # Type hints
 
 from common import *
 
-logger = logging.getLogger("aggregate_samples.py")
+logger = setup_logging(logger="aggregate_samples.py")
 
 
 # Parse quantification table
@@ -238,7 +238,6 @@ def test_merge_reduced_frames() -> None:
 if __name__ == '__main__':
     # Building output directory
     makedirs(op.dirname(snakemake.output["NumReads"]))
-    setup_logging(logger)
 
     # Iterating through columns
     for column in ["NumReads", "TPM"]:

@@ -38,7 +38,7 @@ from typing import Dict, Any         # Typing hints
 
 from common import *
 
-logger = logging.getLogger("prepare_config.py")
+logger = setup_logging(logger="prepare_config.py")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -389,7 +389,6 @@ def main(args: argparse.ArgumentParser) -> None:
 if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
-    setup_logging(logger, args)
 
     try:
         logger.debug("Preparing configuration")

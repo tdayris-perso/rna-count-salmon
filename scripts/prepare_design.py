@@ -41,7 +41,7 @@ from typing import Dict, Generator, List, Any   # Type hints
 
 from common import *
 
-logger = logging.getLogger("prepare_design.py")
+logger = setup_logging(logger="prepare_design.py")
 
 
 # Processing functions
@@ -170,9 +170,7 @@ def test_classify_fq():
             'Downstream_file': prefix / "tests" / "reads" / 'B_R2.fastq'
         }
     }
-    logger = logging.getLogger(
-        os.path.splitext(os.path.basename(sys.argv[0]))[0]
-    )
+    logger = logging.getLogger("prepare_design.py")
     assert classify_fq(fq_list) == expected
 
 
@@ -296,7 +294,7 @@ def main(args: argparse.ArgumentParser) -> None:
 if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
-    setup_logging(logger, args)
+    logger = setup_logging(logger="prepare_design.py", args=args)
 
     try:
         logger.debug("Preparing design")

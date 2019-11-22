@@ -69,26 +69,9 @@ def setup_logging(args: argparse.ArgumentParser) -> None:
         root.addHandler(ch)
 
 
-# Argument parsing functions
-def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
+def parser() -> argparse.ArgumentParser:
     """
-    This function parses command line arguments
-
-    Parameters
-        args     Any             All command line arguments
-
-    Return
-                ArgumentParser   A object designed to parse the command line
-
-    Example:
-    >>> parse_args(shlex.split("/path/to/fasta --no-fastqc"))
-    Namespace(aggregate=False, cold_storage=[' '], debug=False,
-    design='design.tsv', fasta='/path/to/fasta', gtf=None, libType='A',
-    no_fastqc=False, no_multiqc=False, quiet=False, salmon_index_extra='
-    --keepDuplicates --gencode --perfectHash', salmon_quant_extra='
-    --numBootstraps 100 --validateMappings --gcBias --seqBias',
-    singularity='docker://continuumio/miniconda3:4.4.10',
-    threads=1, workdir='.')
+    Build the argument parser object
     """
     main_parser = argparse.ArgumentParser(
         description=sys.modules[__name__].__doc__,
@@ -207,7 +190,31 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
         action='store_true'
     )
 
-    return main_parser.parse_args(args)
+    return main_parser
+
+
+# Argument parsing functions
+def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
+    """
+    This function parses command line arguments
+
+    Parameters
+        args     Any             All command line arguments
+
+    Return
+                ArgumentParser   A object designed to parse the command line
+
+    Example:
+    >>> parse_args(shlex.split("/path/to/fasta --no-fastqc"))
+    Namespace(aggregate=False, cold_storage=[' '], debug=False,
+    design='design.tsv', fasta='/path/to/fasta', gtf=None, libType='A',
+    no_fastqc=False, no_multiqc=False, quiet=False, salmon_index_extra='
+    --keepDuplicates --gencode --perfectHash', salmon_quant_extra='
+    --numBootstraps 100 --validateMappings --gcBias --seqBias',
+    singularity='docker://continuumio/miniconda3:4.4.10',
+    threads=1, workdir='.')
+    """
+    return parser().parse_args(args)
 
 
 def test_parse_args() -> None:

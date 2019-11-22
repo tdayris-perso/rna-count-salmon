@@ -1,4 +1,4 @@
-[![GitHub actions status](https://github.com/tdayris-perso/rna-count-salmon/workflows/CI/badge.svg?branch=master)](https://github.com/tdayris-perso/rna-count-salmon/workflows/CI/badge.svg?branch=master)
+[![GitHub actions status](https://github.com/tdayris-perso/rna-count-salmon/workflows/CI/badge.svg?branch=master)](https://github.com/tdayris-perso/rna-count-salmon/actions?query=branch%3Amaster+workflow%3ACI)
 
 Snakemake workflow: rna-count-salmon
 

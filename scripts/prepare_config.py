@@ -36,37 +36,9 @@ import yaml                 # Parse Yaml files
 from pathlib import Path             # Paths related methods
 from typing import Dict, Any         # Typing hints
 
+from common import *
 
-logger = logging.getLogger(
-    os.path.splitext(os.path.basename(sys.argv[0]))[0]
-)
-
-
-# Building custom class for help formatter
-class CustomFormatter(argparse.RawDescriptionHelpFormatter,
-                      argparse.ArgumentDefaultsHelpFormatter):
-    """
-    This class is used only to allow line breaks in the documentation,
-    without breaking the classic argument formatting.
-    """
-    pass
-
-
-# Handling logging options
-# No tests for this function
-def setup_logging(args: argparse.ArgumentParser) -> None:
-    """
-    Configure logging behaviour
-    """
-    root = logging.getLogger("")
-    root.setLevel(logging.WARNING)
-    logger.setLevel(args.debug and logging.DEBUG or logging.INFO)
-    if not args.quiet:
-        ch = logging.StreamHandler()
-        ch.setFormatter(logging.Formatter(
-            "%(levelname)s [%(name)s]: %(message)s"
-        ))
-        root.addHandler(ch)
+logger = logging.getLogger("prepare_config.py")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -417,7 +389,7 @@ def main(args: argparse.ArgumentParser) -> None:
 if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
-    setup_logging(args)
+    setup_logging(logger, args)
 
     try:
         logger.debug("Preparing configuration")

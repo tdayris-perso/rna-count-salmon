@@ -29,26 +29,9 @@ from snakemake.utils import makedirs  # Build output directories
 from typing import List               # Type hints
 
 
-logger = logging.getLogger(
-    os.path.splitext(os.path.basename(sys.argv[0]))[0]
-)
+from common import *
 
-
-# Handling logging options
-# No tests for this function
-def setup_logging() -> None:
-    """
-    Configure logging behaviour
-    """
-    root = logging.getLogger("")
-    root.setLevel(logging.WARNING)
-    logger.setLevel(logging.DEBUG)
-    if not args.quiet:
-        ch = logging.StreamHandler()
-        ch.setFormatter(logging.Formatter(
-            "%(levelname)s [%(name)s]: %(message)s"
-        ))
-        root.addHandler(ch)
+logger = logging.getLogger("aggregate_samples.py")
 
 
 # Parse quantification table
@@ -255,6 +238,7 @@ def test_merge_reduced_frames() -> None:
 if __name__ == '__main__':
     # Building output directory
     makedirs(op.dirname(snakemake.output["NumReads"]))
+    setup_logging(logger)
 
     # Iterating through columns
     for column in ["NumReads", "TPM"]:

@@ -45,14 +45,14 @@ config-tests: SHELL:=$(BASH) -i
 config-tests:
 	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTEST) -v $(TEST_CONFIG) && \
-	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests -o tests/config.yaml
+	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir tests --debug
 
 # Running tests on design only
 design-tests: SHELL:=$(BASH) -i
 design-tests:
 	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTEST) -v $(TEST_DESIGN) && \
-	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv
+	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o tests/design.tsv --debug
 
 # Running tests on aggregation only
 aggregation-tests: SHELL:=$(BASH) -i

@@ -11,20 +11,24 @@ on:
 
 jobs:
   SonarCloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1.1
+        uses: SonarSource/sonarcloud-github-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITTOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   conda_setup:
+    name: Conda Setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Setup conda
         run: bash .github/workflows/setup.sh
   pipeline_test:
+    name: Pipeline tests
     runs-on: ubuntu-latest
     needs: conda_setup
     steps:

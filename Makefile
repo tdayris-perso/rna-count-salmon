@@ -80,6 +80,9 @@ singularity-tests:
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --forceall --printshellcmds --reason --directory ${PWD}/tests --use-singularity && \
 	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --directory ${PWD}/tests --report
 
-### Cleaning tests results ###
+
+# Cleaning
+clean: SHELL:=$(BASH) -i
 clean:
-	rm -rf test/{.snakemake,logs,genome,aggregated_salmon_counts,pseudo_mapping,qc,raw_data,report.html}
+	$(CONDA_ACTIVATE) $(ENV_NAME) && \
+	$(SNAKEMAKE) -s $(SNAKE_FILE) --use-conda -j $(SNAKE_THREADS) --force --configfile ${PWD}/tests/config.yaml --use-singularity --directory ${PWD}/tests --delete-all-output

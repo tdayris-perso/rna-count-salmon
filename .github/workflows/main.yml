@@ -39,5 +39,7 @@ jobs:
         run: make all-unit-tests
       - name: Run Snakemake-workflow
         run: make ci-tests
+      - name: Clean
+        run: make clean
       - name: Run workflow in Singularity
         run: make singularity-tests

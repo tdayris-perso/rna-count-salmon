@@ -13,7 +13,7 @@ TEST_DESIGN      = scripts/prepare_design.py
 TEST_AGGREGATION = scripts/aggregate_samples.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
-TRANSCRIPT_PATH  = genomes/transcriptome.fasta
+TRANSCRIPT_PATH  = tests/genomes/transcriptome.fasta
 READS_PATH       = tests/reads/
 
 # Arguments
@@ -64,7 +64,6 @@ aggregation-tests:
 # Running snakemake on test datasets
 ci-tests: SHELL:=$(BASH) -i
 ci-tests:
-	ls && pwd && \
 	$(CONDA_ACTIVATE) $(ENV_NAME) && \
 	$(PYTHON) $(TEST_DESIGN) $(READS_PATH) -o ${PWD}/tests/design.tsv --debug && \
 	$(PYTHON) $(TEST_CONFIG) $(TRANSCRIPT_PATH) --salmon-index-extra $(SAINDEX_ARGS) --salmon-quant-extra $(SAQUANT_ARGS) --aggregate --libType "ISF" --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads $(SNAKE_THREADS) --debug && \

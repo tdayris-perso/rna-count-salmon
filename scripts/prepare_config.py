@@ -253,8 +253,8 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
         "singularity_docker_image": args.singularity,
         "cold_storage": args.cold_storage,
         "ref": {
-            "fasta": str(Path(args.fasta).absolute()),
-            "gtf": (str(Path(args.gtf).absolute())
+            "fasta": os.path.abspath(args.fasta),
+            "gtf": (os.path.abspath(args.gtf)
                     if args.gtf is not None
                     else None)
         },

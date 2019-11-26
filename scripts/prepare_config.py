@@ -253,8 +253,10 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
         "singularity_docker_image": args.singularity,
         "cold_storage": args.cold_storage,
         "ref": {
-            "fasta": args.fasta,
-            "gtf": args.gtf
+            "fasta": str(Path(args.fasta).absolute()),
+            "gtf": (str(Path(args.gtf).absolute())
+                    if args.gtf is not None
+                    else None)
         },
         "workflow": {
             "fastqc": not args.no_fastqc,
@@ -314,7 +316,6 @@ def test_args_to_dict() -> None:
             "libType": "A"
         }
     }
-
     assert args_to_dict(options) == expected
 
 

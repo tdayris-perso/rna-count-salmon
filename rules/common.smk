@@ -255,8 +255,12 @@ def get_targets(no_multiqc: bool = False,
         except KeyError:
             pass
 
-    targets["quant"] = expand(
+    targets["quant_renamed"] = expand(
         "pseudo_mapping/{sample}/quant.{sample}.tsv",
+        sample=sample_id_list
+    )
+    targets["quant"] = expand(
+        "pseudo_mapping/{sample}/quant.sf",
         sample=sample_id_list
     )
     return targets

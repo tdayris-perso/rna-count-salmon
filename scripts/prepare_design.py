@@ -170,7 +170,7 @@ def test_classify_fq():
             'Downstream_file': prefix / "tests" / "reads" / 'B_R2.fastq'
         }
     }
-    logger = logging.getLogger("prepare_design.py")
+
     assert classify_fq(fq_list) == expected
 
 
@@ -294,7 +294,6 @@ def main(args: argparse.ArgumentParser) -> None:
 if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
-    logger = setup_logging(logger="prepare_design.py", args=args)
 
     try:
         logger.debug("Preparing design")

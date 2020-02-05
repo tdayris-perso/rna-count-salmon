@@ -21,6 +21,6 @@ localrules: copy_fastq, copy_extra
 
 rule all:
     input:
-        **targets_dict
+        **get_targets(get_multiqc=True, get_aggreg=True, get_renamed=True)
     message:
         "Finishing the Salmon RNA-Seq quantification pipeline"

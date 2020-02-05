@@ -215,7 +215,9 @@ def salmon_quant_output() -> str:
     Return optionnal quant.genes if required by user
     """
     base = {"quant": "pseudo_mapping/{sample}/quant.sf"}
+
     try:
+        # Case there is a GTF passed in the config file
         if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
             base["quant_genes"] = "pseudo_mapping/{sample}/quant.genes.sf"
     except KeyError:
@@ -224,45 +226,57 @@ def salmon_quant_output() -> str:
         return base
 
 
-def get_targets(no_multiqc: bool = False,
-                no_aggregation: bool = False) -> Dict[str, Any]:
+def get_targets(get_fastqc: bool = False,
+                get_aggreg: bool = False,
+                get_multiqc: bool = False,
+                get_renamed: bool = False,
+                get_quant: bool = False,
+                get_qc_config: bool = False) -> Dict[str, Any]:
     """
     This function returns the targets of Snakemake
     following the requests from the user.
     """
     targets = {}
-    if config["workflow"]["fastqc"] is True:
+    if config["workflow"]["fastqc"] is True and get_fastqc is True:
         targets["fastqc"] = expand(
             "qc/fastqc/{samples}_fastqc.{ext}",
             samples=fq_root_dict.keys(),
             ext=["html", "zip"]
         )
 
-    if config["workflow"]["multiqc"] and not no_multiqc and not no_aggregation:
+    if config["workflow"]["multiqc"] is True and get_multiqc is True:
         targets["multiqc"] = "qc/multiqc_report.html"
 
-    if config["workflow"]["aggregate"] is True:
-        targets["aggregation"] = [
-            "aggregated_salmon_counts/NumReads_transcripts.tsv",
-            "aggregated_salmon_counts/TPM_transcripts.tsv"
-        ]
+    if get_qc_config is True and config["workflow"]["multiqc"] is True:
+        targets["qc_conf"] = "qc/multiqc_configs/complete_multiqc_config.yaml"
+
+    if config["workflow"]["aggregate"] is True and get_aggreg is True:
+        targets["aggregation_tr"] = expand(
+            "aggregated_salmon_counts/{file}.sf.annotated.tsv",
+            file=["NumReads", "TPM"]
+        )
+
         try:
             if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
-                targets["aggregation"] += [
-                    "aggregated_salmon_counts/NumReads_genes.tsv",
-                    "aggregated_salmon_counts/TPM_genes.tsv"
-                ]
+                targets["aggregation_ge"] = expand(
+                    "aggregated_salmon_counts/{file}.genes.sf.annotated.tsv",
+                    file=["NumReads", "TPM"]
+                )
         except KeyError:
             pass
 
-    targets["quant_renamed"] = expand(
-        "pseudo_mapping/{sample}/quant.{sample}.tsv",
-        sample=sample_id_list
-    )
-    targets["quant"] = expand(
-        "pseudo_mapping/{sample}/quant.sf",
-        sample=sample_id_list
-    )
+    if get_renamed is True:
+        targets["quant_renamed"] = expand(
+            "pseudo_mapping/{sample}/quant.{sample}.tsv",
+            sample=sample_id_list
+        )
+
+    if get_quant is True:
+        targets["quant"] = expand(
+            "pseudo_mapping/{sample}/quant.sf",
+            sample=sample_id_list
+        )
+
     return targets
 
 
@@ -275,3 +289,7 @@ fq_pairs_dict = fq_pairs()
 refs_pack_dict = refs_pack()
 sample_id_list = sample_id()
 targets_dict = get_targets()
+
+# Wildcards constraints
+sample_constraint = "|".join(sample_id_list)
+gene_ext_constraint = "|".join(["sf", "genes.sf"])

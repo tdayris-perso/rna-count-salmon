@@ -24,9 +24,8 @@ rule fastqc:
         time_min = (
             lambda wildcards, attempt: min(attempt * 45, 120)
         )
-    version: "1.0"
     wildcard_constraints:
-        sample = r"[^/]+"
+        sample = sample_constraint
     log:
         "logs/fastqc/{sample}.log"
     message:

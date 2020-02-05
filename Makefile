@@ -18,12 +18,17 @@ CONDA_ACTIVATE   = source $$(conda info --base)/etc/profile.d/conda.sh ; conda a
 TEST_CONFIG      = scripts/prepare_config.py
 TEST_DESIGN      = scripts/prepare_design.py
 TEST_AGGREGATION = scripts/aggregate_samples.py
+TEST_TR2GENE     = scripts/transcript_to_gene.py
+TEST_NULLCOUNTS  = scripts/null_counts.py
+TEST_BOXCOUNTS   = scripts/box_counts.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
 TRANSCRIPT_PATH  = tests/genomes/transcriptome.fasta
+GTF_PATH         = tests/genomes/transcriptome.gtf
 READS_PATH       = tests/reads/
 
 # Arguments
+PYTEST_ARGS      = -vv
 ENV_NAME         = rna-count-salmon
 SNAKE_THREADS    = 1
 SAINDEX_ARGS     = ' --kmerLen 5 '
@@ -37,57 +42,85 @@ conda-tests:
 	${CONDA_ACTIVATE} base && \
 	${CONDA} env create --file ${ENV_YAML} --force && \
 	${CONDA} activate ${ENV_NAME}
+.PHONY: conda-tests
+
 
 ### UNIT TESTS ###
 # Running all unit-tests (one for each python scripts)
 all-unit-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTEST} -v ${TEST_CONFIG} ${TEST_DESIGN} ${TEST_AGGREGATION}
+	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} ${TEST_DESIGN} ${TEST_AGGREGATION} ${TEST_BOXCOUNTS} \
+	${TEST_TR2GENE} ${TEST_NULLCOUNTS}
 .PHONY: all-unit-tests
+
 
 # Running all unit test (on prepare_config.py only)
 config-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTEST} -v ${TEST_CONFIG} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} && \
 	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
 .PHONY: config-tests
+
 
 # Running all unit test (on prepare_design.py only)
 design-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTEST} -v ${TEST_DESIGN} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_DESIGN} && \
 	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o tests/design.tsv --debug
 .PHONY: design-tests
+
 
 # Running all unit test (on aggregate.py only)
 aggregation-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTEST} -v ${TEST_AGGREGATION}
+	${PYTEST} ${PYTEST_ARGS} ${TEST_AGGREGATION}
 .PHONY: aggregation-tests
+
+
+# Running all unit test (on transcript_to_gene.py only)
+transcript_to_gene-tests:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_TR2GENE}
+.PHONY: transcript_to_gene-tests
+
+
+# Running all unit test (on null_counts.py only)
+null-counts-tests:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_NULLCOUNTS}
+.PHONY: null-counts-tests
+
+
+# Running all unit test (on box_counts.py only)
+box-counts-tests:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_BOXCOUNTS}
+.PHONY: box-counts-tests
+
 
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
-ci-tests:
+test-conda-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
+	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --forceall --printshellcmds --reason --directory ${PWD}/tests && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report
-.PHONY: ci-tests
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report test-conda-report.html
+
 
 # Running snakemake on test datasets with singularity flag raised on
-singularity-tests:
+test-singularity-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
+	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --forceall --printshellcmds --reason --directory ${PWD}/tests --use-singularity && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report
-.PHONY: singularity-tests
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report test-singularity-report.html
 
 # Cleaning Snakemake outputs
 clean:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --force --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --delete-all-output
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --force --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --delete-all-output && \
+	rm -r ${PWD}/tests/*-report.html
 .PHONY: clean
 
 # Display pipeline graph

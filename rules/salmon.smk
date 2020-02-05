@@ -19,7 +19,6 @@ rule salmon_index:
         time_min = (
             lambda wildcards, attempt: min(attempt * 15 + 60, 180)
         )
-    version: "1.0"
     threads:
         min(config["threads"], 12)
     params:
@@ -50,7 +49,8 @@ rule salmon_quant:
         time_min = (
             lambda wildcards, attempt: min(attempt * 15 + 75, 180)
         )
-    version: swv
+    wildcard_constraints:
+        sample = sample_constraint
     threads:
         min(config["threads"], 12)
     params:
@@ -70,11 +70,7 @@ rule salmon_quant_rename:
     input:
         "pseudo_mapping/{sample}/quant.sf"
     output:
-        report(
-            "pseudo_mapping/{sample}/quant.{sample}.tsv",
-            caption="../report/salmon.transcripts.rst",
-            category="Sample Count"
-        )
+        "pseudo_mapping/{sample}/quant.{sample}.tsv"
     message:
         "Symbolic link for quantification of {wildcards.sample}"
     threads:
@@ -86,7 +82,7 @@ rule salmon_quant_rename:
         time_min = (
             lambda wildcards, attempt: min(attempt * 3 + 7, 10)
         )
-    version:
-        1
+    wildcard_constraints:
+        sample = sample_constraint
     shell:
         "ln -s ${{PWD}}/{input} ${{PWD}}/{output}"

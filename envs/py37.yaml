@@ -1,8 +1,12 @@
+---
 name: python_3_7
 channels:
   - bioconda
   - conda-forge
   - defaults
 dependencies:
-  - conda-forge::python=3.7.3
+  - conda-forge::python=3.8.1
   - conda-forge::pandas=0.25.3
+  - conda-forge::bokeh=1.4.0
+  - conda-forge::selenium=3.141.0
+  - conda-forge::phantomjs=2.1.1

@@ -1,3 +1,4 @@
+---
 name: rna-count-salmon
 channels:
   - bioconda

@@ -26,19 +26,17 @@ python3.7 ./prepare_config.py /path/to/fasta_file.fa -v
 
 import argparse             # Parse command line
 import logging              # Traces and loggings
-import logging.handlers     # Logging behaviour
 import os                   # OS related activities
 import pytest               # Unit testing
 import shlex                # Lexical analysis
 import sys                  # System related methods
 import yaml                 # Parse Yaml files
 
-from pathlib import Path             # Paths related methods
-from typing import Dict, Any         # Typing hints
+from pathlib import Path              # Paths related methods
+from snakemake.utils import makedirs  # Easily build directories
+from typing import Dict, Any          # Typing hints
 
 from common import *
-
-logger = setup_logging(logger="prepare_config.py")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -269,7 +267,7 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
             "libType": args.libType
         }
     }
-    logger.debug(result_dict)
+    logging.debug(result_dict)
     return result_dict
 
 
@@ -376,13 +374,13 @@ def main(args: argparse.ArgumentParser) -> None:
     >>> main(parse_args(shlex.split("/path/to/fasta")))
     """
     # Building pipeline arguments
-    logger.debug("Building configuration file:")
+    logging.debug("Building configuration file:")
     config_params = args_to_dict(args)
     output_path = Path(args.workdir) / "config.yaml"
 
     # Saving as yaml
     with output_path.open("w") as config_yaml:
-        logger.debug(f"Saving results to {str(output_path)}")
+        logging.debug(f"Saving results to {str(output_path)}")
         config_yaml.write(dict_to_yaml(config_params))
 
 
@@ -390,11 +388,19 @@ def main(args: argparse.ArgumentParser) -> None:
 if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
+    makedirs("logs/prepare")
+
+    # Build logging object and behaviour
+    logging.basicConfig(
+        filename="logs/prepare/config.log",
+        filemode="w",
+        level=logging.DEBUG
+    )
 
     try:
-        logger.debug("Preparing configuration")
+        logging.debug("Preparing configuration")
         main(args)
     except Exception as e:
-        logger.exception("%s", e)
+        logging.exception("%s", e)
         sys.exit(1)
     sys.exit(0)

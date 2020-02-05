@@ -29,7 +29,6 @@ python3.7 ./prepare_design.py tests --recursive
 
 import argparse           # Parse command line
 import logging            # Traces and loggings
-import logging.handlers   # Logging behaviour
 import os                 # OS related activities
 import pandas as pd       # Parse TSV files
 import pytest             # Unit testing
@@ -37,11 +36,10 @@ import shlex              # Lexical analysis
 import sys                # System related methods
 
 from pathlib import Path                        # Paths related methods
+from snakemake.utils import makedirs            # Easily build directories
 from typing import Dict, Generator, List, Any   # Type hints
 
 from common import *
-
-logger = setup_logging(logger="prepare_design.py")
 
 
 # Processing functions
@@ -90,7 +88,7 @@ def test_search_fq():
     pytest -v prepare_design.py -k test_search_fq
     """
     path = Path("tests/reads/")
-    print(path)
+
     expected = list(
         path / "{}_R{}.fastq".format(sample, stream)
         for sample in ["A", "B"]
@@ -129,7 +127,7 @@ def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
     fq_dict = {}
     if paired is not True:
         # Case single fastq per sample
-        logger.debug("Sorting fastq files as single-ended")
+        logging.debug("Sorting fastq files as single-ended")
         for fq in fq_files:
             fq_dict[fq.name] = {
                 "Sample_id": fq.stem,
@@ -137,14 +135,14 @@ def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
             }
     else:
         # Case pairs of fastq are used
-        logger.debug("Sorting fastq files as pair-ended")
+        logging.debug("Sorting fastq files as pair-ended")
         for fq1, fq2 in zip(fq_files[0::2], fq_files[1::2]):
             fq_dict[fq1.name] = {
                 "Sample_id": fq1.stem,
                 "Upstream_file": fq1.absolute(),
                 "Downstream_file": fq2.absolute()
             }
-    logger.debug(fq_dict)
+    logging.debug(fq_dict)
     return fq_dict
 
 
@@ -277,16 +275,16 @@ def main(args: argparse.ArgumentParser) -> None:
     """
     # Searching for fastq files and sorting them alphabetically
     fq_files = sorted(list(search_fq(Path(args.path), args.recursive)))
-    logger.debug("Head of alphabeticaly sorted list of fastq files:")
-    logger.debug([str(i) for i in fq_files[0:5]])
+    logging.debug("Head of alphabeticaly sorted list of fastq files:")
+    logging.debug([str(i) for i in fq_files[0:5]])
 
     # Building a dictionnary of fastq (pairs?) and identifiers
     fq_dict = classify_fq(fq_files)
 
     # Using Pandas to handle TSV output (yes pretty harsh I know)
     data = pd.DataFrame(fq_dict).T
-    logger.debug("\n{}".format(data.head()))
-    logger.debug("Saving results to {}".format(args.output))
+    logging.debug("\n{}".format(data.head()))
+    logging.debug("Saving results to {}".format(args.output))
     data.to_csv(args.output, sep="\t", index=False)
 
 
@@ -295,10 +293,19 @@ if __name__ == '__main__':
     # Parsing command line
     args = parse_args()
 
+    makedirs("logs/prepare")
+
+    # Build logging object and behaviour
+    logging.basicConfig(
+        filename="logs/prepare/config.log",
+        filemode="w",
+        level=logging.DEBUG
+    )
+
     try:
-        logger.debug("Preparing design")
+        logging.debug("Preparing design")
         main(args)
     except Exception as e:
-        logger.exception("%s", e)
+        logging.exception("%s", e)
         sys.exit(1)
     sys.exit(0)

@@ -7,8 +7,13 @@ This script contains functions that are to be called by any other scripts in
 this pipeline.
 """
 
-import argparse    # Argument parsing
-import logging     # Logging behaviour
+import argparse        # Argument parsing
+import logging         # Logging behaviour
+import pandas          # Handle large datasets
+import yaml            # Handle Yaml IO
+
+from pathlib import Path      # Easily handle paths
+from typing import Any, Dict  # Type hints
 
 
 # Building custom class for help formatter
@@ -21,26 +26,27 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter,
     pass
 
 
-# Handling logging options
-# No tests for this function
-def setup_logging(logger: str,
-                  args: argparse.ArgumentParser = None) -> logging.Logger:
+def write_yaml(output_yaml: Path, data: Dict[str, Any]) -> None:
     """
-    Configure logging behaviour
+    Save given dictionnary as Yaml-formatted text file
     """
-    logger = logging.getLogger(logger)
-    root = logging.getLogger("")
-    root.setLevel(logging.WARNING)
+    with output_yaml.open("w") as outyaml:
+        yaml.dump(data, outyaml, default_flow_style=False)
 
-    if args is not None:
-        logger.setLevel(args.debug and logging.DEBUG or logging.INFO)
-    else:
-        logger.setLevel(logging.DEBUG or logging.INFO)
 
-    if (args is None) or (args.quiet is False):
-        ch = logging.StreamHandler()
-        ch.setFormatter(logging.Formatter(
-            "%(levelname)s [%(name)s]: %(message)s"
-        ))
-        root.addHandler(ch)
-    return logger
+def read_aggregation_table(count: str) -> pandas.DataFrame:
+    # Build io paths objects
+    count_table = Path(count)
+
+    # Load dataset
+    data = pandas.read_csv(
+        count_table,
+        sep="\t",
+        index_col=0,
+        header=0
+    )
+
+    logging.debug("Head of the count data:")
+    logging.debug(data.head())
+
+    return data

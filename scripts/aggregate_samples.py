@@ -18,7 +18,6 @@ This script is not intended to be used outside Snakemake.
 """
 
 import logging            # Traces and loggings
-import logging.handlers   # Logging behaviour
 import os                 # Dealing with OS related function
 import os.path as op      # Dealing with paths
 import pandas as pd       # Parsing large quantification tables
@@ -27,11 +26,6 @@ import sys                # System related functions
 from pathlib import Path              # Easily deal with paths
 from snakemake.utils import makedirs  # Build output directories
 from typing import List               # Type hints
-
-
-from common import *
-
-logger = setup_logging(logger="aggregate_samples.py")
 
 
 # Parse quantification table
@@ -89,9 +83,6 @@ def test_read_salmon() -> None:
             'ENST00000387459.1': 19.0
         }
     }).sort_index()
-
-    print(test)
-    print(expected)
 
     assert all(test == expected)
 
@@ -182,7 +173,7 @@ def merge_reduced_frames(*paths: List[str],
     """
     merged_frame = None
     for path in paths:
-        logger.debug("Working on {}".format(path))
+        logging.debug("Working on {}".format(path))
         data = extract_field(
             read_salmon(path),
             str(path) if prefix == "" else str(path)[len(prefix):],
@@ -202,8 +193,8 @@ def merge_reduced_frames(*paths: List[str],
             merged_frame = data
 
     merged_frame.fillna(0)
-    logger.debug("Head of the {}-merged frame:".format(column))
-    logger.debug(merged_frame.head())
+    logging.debug(f"Head of the {column}-merged frame:")
+    logging.debug(merged_frame.head())
     return merged_frame
 
 
@@ -236,18 +227,30 @@ def test_merge_reduced_frames() -> None:
 
 # The main process of the programm, not launched on import
 if __name__ == '__main__':
+    # Build logging object and behaviour
+    logging.basicConfig(
+        filename=snakemake.log[0],
+        filemode="w",
+        level=logging.DEBUG
+    )
+
     # Building output directory
     makedirs(op.dirname(snakemake.output["NumReads"]))
 
     # Iterating through columns
     for column in ["NumReads", "TPM"]:
-        data = merge_reduced_frames(
-            *snakemake.input["quants"],
-            prefix="pseudo_mapping/",
-            column=column
-        )
+        try:
+            data = merge_reduced_frames(
+                *snakemake.input["quants"],
+                prefix="pseudo_mapping/",
+                column=column
+            )
 
-        logger.debug(data.head())
+            logging.debug(data.head())
 
-        # Saving to TSV formatted text file
-        data.to_csv(snakemake.output[column], sep="\t")
+            # Saving to TSV formatted text file
+            data.to_csv(snakemake.output[column], sep="\t")
+        except Exception as e:
+            logging.exception("%s", e)
+            sys.exit(1)
+    sys.exit(0)

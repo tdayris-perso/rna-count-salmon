@@ -115,7 +115,7 @@ def to_multiqc_yaml(data: pandas.DataFrame) -> Dict[str, Any]:
     """
     return {
         'custom_data': {
-            'my_data_type': {
+            'box_count_stats': {
                 'id': 'quantiles_section',
                 'section_name': 'Count quantiles',
                 'description': 'These box plots shows counts across samples',

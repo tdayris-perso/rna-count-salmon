@@ -115,7 +115,7 @@ def test_to_multiqc_yaml() -> None:
     })
     expected = {
         'custom_data': {
-            'my_data_type': {
+            'null_count_stats': {
                 'id': 'null_count_section',
                 'section_name': 'Null count statistics',
                 'description': 'This graph shows null count per sample',

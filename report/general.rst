@@ -1,7 +1,9 @@
 Material and Methods:
 #####################
 
-Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_format>`_ files with FastQC. Quality reports were gathered with MultiQC. Abundance estimation was performed with Salmon. Optional parameters (if any) are listed below. Aggregation was performed with an in-house python script available in the `scripts` directory.
+Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_format>`_ files with FastQC. Quality reports were gathered with MultiQC. Abundance estimation was performed with Salmon. Optional parameters (if any) are listed below.
+
+Count aggregation and MultiQC customisation were performed with in-house python scripts available in the `scripts` directory.
 
 * Salmon index optional arguments: `{{snakemake.config.params.salmon_index_extra}}`
 * Salmon quantification optional arguments: `{{snakemake.config.params.salmon_quant_extra}}`

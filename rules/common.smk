@@ -251,19 +251,22 @@ def get_targets(get_fastqc: bool = False,
         targets["qc_conf"] = "qc/multiqc_configs/complete_multiqc_config.yaml"
 
     if config["workflow"]["aggregate"] is True and get_aggreg is True:
-        targets["aggregation_tr"] = expand(
-            "aggregated_salmon_counts/{file}.sf.annotated.tsv",
-            file=["NumReads", "TPM"]
-        )
-
         try:
             if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
+                targets["aggregation_tr"] = expand(
+                    "aggregated_salmon_counts/{file}.sf.annotated.tsv",
+                    file=["NumReads", "TPM"]
+                )
+
                 targets["aggregation_ge"] = expand(
                     "aggregated_salmon_counts/{file}.genes.sf.annotated.tsv",
                     file=["NumReads", "TPM"]
                 )
         except KeyError:
-            pass
+            targets["aggregation_tr"] = expand(
+                "aggregated_salmon_counts/{file}.sf.tsv",
+                file=["NumReads", "TPM"]
+            )
 
     if get_renamed is True:
         targets["quant_renamed"] = expand(

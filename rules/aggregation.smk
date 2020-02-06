@@ -98,7 +98,7 @@ TSV-formatted text file.
 """
 rule tr2gene:
     input:
-        gtf = refs_pack_dict["gtf"]
+        gtf = refs_pack_dict.get("gtf", "")
     output:
         tsv = temp("aggregated_salmon_counts/tr2gene.tsv")
     message:

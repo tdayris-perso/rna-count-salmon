@@ -58,7 +58,7 @@ all-unit-tests:
 config-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} && \
-	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
+	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
 .PHONY: config-tests
 
 
@@ -66,7 +66,7 @@ config-tests:
 design-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_DESIGN} && \
-	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o tests/design.tsv --debug
+	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o tests/design.tsv --debug
 .PHONY: design-tests
 
 
@@ -102,8 +102,17 @@ box-counts-tests:
 # Running snakemake on test datasets
 test-conda-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
+	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
+	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --forceall --printshellcmds --reason --directory ${PWD}/tests && \
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report test-conda-report.html
+
+
+# Testing pipeline without gtf
+test-no-gtf-report.html:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}//tests/design.tsv --debug && \
+	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --forceall --printshellcmds --reason --directory ${PWD}/tests && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report test-conda-report.html
 
@@ -111,8 +120,8 @@ test-conda-report.html:
 # Running snakemake on test datasets with singularity flag raised on
 test-singularity-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	$(PYTHON) ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	$(PYTHON) ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
+	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
+	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --gtf ${GTF_PATH} --debug && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --forceall --printshellcmds --reason --directory ${PWD}/tests --use-singularity && \
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --directory ${PWD}/tests --report test-singularity-report.html
 

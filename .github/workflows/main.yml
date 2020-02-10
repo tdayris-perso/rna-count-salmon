@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -10,16 +11,6 @@ on:
     - cron: '0 0 * * 0'
 
 jobs:
-  SonarCloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets. GITHUBTOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONARTOKEN }}
   conda_setup:
     name: Conda Setup
     runs-on: ubuntu-latest

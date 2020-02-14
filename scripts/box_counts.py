@@ -6,7 +6,10 @@ This script extracts statistics on non-null counts based on aggregated
 salmon's quant files (either genes or granscripts). It produces:
 
 - A yaml file that suits MultiQC requirements
+
+Soon:
 - A png image (box plots)
+- An HTML widget (box plots)
 """
 
 

@@ -7,6 +7,9 @@ salmon's quant files (either genes or transcripts). It produces:
 
 - A yaml file that suits MultiQC requirements
 - A png image (histograms)
+
+Soon:
+- An HTML widget (histograms)
 """
 
 # Maths

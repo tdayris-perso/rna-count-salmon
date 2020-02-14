@@ -1,14 +1,15 @@
 Material and Methods:
 #####################
 
-Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_format>`_ files with FastQC. Quality reports were gathered with MultiQC. Abundance estimation was performed with Salmon. Optional parameters (if any) are listed below.
+Quality control were made on raw `FastQ <https://en.wikipedia.org/wiki/FASTQ_format>`_ files with FastQC. Quality reports were gathered with MultiQC. Abundance estimation was performed with Salmon, which optional parameters (if any) are listed below.
 
-Count aggregation and MultiQC customisation were performed with in-house python scripts available in the `scripts` directory.
+Count aggregation and MultiQC customization were performed with in-house python scripts, which copies are available at the end of this report.
 
 * Salmon index optional arguments: `{{snakemake.config.params.salmon_index_extra}}`
 * Salmon quantification optional arguments: `{{snakemake.config.params.salmon_quant_extra}}`
+* Library type was set to `{{snakemake.config.params.libType}}` in Salmon. See `Salmon's library type <https://salmon.readthedocs.io/en/latest/library_type.html>`_ definitions for more information.
 
-The whole pipeline was powered by both `Snakemake <https://snakemake.readthedocs.io>`_ , and `SnakemakeWrappers <https://snakemake-wrappers.readthedocs.io/>`_ .
+The whole pipeline was powered by both `Snakemake <https://snakemake.readthedocs.io>`_ , and `Snakemake Wrappers <https://snakemake-wrappers.readthedocs.io/>`_ .
 
 If you need any other information, please read the `Frequently Asked questions <https://github.com/tdayris-perso/rna-count-salmon#frequently-asked-questions-by-my-fellow-biologists-on-this-pipeline>`_ , then contact your bioinformatician if you're still in trouble.
 
@@ -17,6 +18,7 @@ Citations:
 ##########
 
 This pipeline stands on best practices found in multiple high impact papers, published in Nature, Cell, Bioinformatics, and others.
+
 
 FastQC
   ANDREWS, Simon, et al. FastQC: a quality control tool for high throughput sequence data. 2010.
@@ -27,6 +29,8 @@ FastQC
 
 Salmon
   Patro, Rob, et al. “Salmon provides fast and bias-aware quantification of transcript expression.” Nature Methods (2017). Advanced Online Publication. doi: 10.1038/nmeth.4197.
+
+  Why Salmon? Cited more than 1200 the last three years, Salmon is a very powerful tool to quantify transcripts taking into account a wide range of bias (either biological, or bioinformatical ones).
 
   https://salmon.readthedocs.io/
 

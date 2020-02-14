@@ -297,7 +297,7 @@ if __name__ == '__main__':
 
     # Build logging object and behaviour
     logging.basicConfig(
-        filename="logs/prepare/config.log",
+        filename="logs/prepare/design.log",
         filemode="w",
         level=logging.DEBUG
     )

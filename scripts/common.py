@@ -12,8 +12,8 @@ import logging         # Logging behaviour
 import pandas          # Handle large datasets
 import yaml            # Handle Yaml IO
 
-from pathlib import Path      # Easily handle paths
-from typing import Any, Dict  # Type hints
+from pathlib import Path             # Easily handle paths
+from typing import Any, Dict, Union  # Type hints
 
 
 # Building custom class for help formatter

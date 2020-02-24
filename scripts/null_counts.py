@@ -7,9 +7,6 @@ salmon's quant files (either genes or transcripts). It produces:
 
 - A yaml file that suits MultiQC requirements
 - A png image (histograms)
-
-Soon:
-- An HTML widget (histograms)
 """
 
 # Maths
@@ -141,7 +138,8 @@ def test_to_multiqc_yaml() -> None:
 
 def bokeh_figure(data: pandas.DataFrame) -> figure:
     """
-    This function produces
+    This function produces a bokeh.models.figure object
+    which represents a histogram of null count data
     """
     # Reducing data to columns of interest
     cols = ["nb_null", "nb_not_null"]

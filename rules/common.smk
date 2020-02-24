@@ -231,7 +231,8 @@ def get_targets(get_fastqc: bool = False,
                 get_multiqc: bool = False,
                 get_renamed: bool = False,
                 get_quant: bool = False,
-                get_qc_config: bool = False) -> Dict[str, Any]:
+                get_qc_config: bool = False,
+                get_notebook: bool = False) -> Dict[str, Any]:
     """
     This function returns the targets of Snakemake
     following the requests from the user.
@@ -279,6 +280,9 @@ def get_targets(get_fastqc: bool = False,
             "pseudo_mapping/{sample}/quant.sf",
             sample=sample_id_list
         )
+
+    if get_notebook is True:
+        targets["notebook"] = "notebook/notebook.html"
 
     return targets
 

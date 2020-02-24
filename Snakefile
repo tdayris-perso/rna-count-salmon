@@ -14,6 +14,7 @@ include: "rules/fastqc.smk"
 include: "rules/multiqc.smk"
 include: "rules/salmon.smk"
 include: "rules/aggregation.smk"
+include: "rules/notebook.smk"
 
 workdir: config["workdir"]
 singularity: config["singularity_docker_image"]
@@ -22,6 +23,7 @@ localrules: copy_fastq, copy_extra
 rule all:
     input:
         **get_targets(get_multiqc=True, get_aggreg=True,
-                      get_renamed=True, get_fastqc=True)
+                      get_renamed=True, get_fastqc=True,
+                      get_notebook=False)
     message:
         "Finishing the Salmon RNA-Seq quantification pipeline"

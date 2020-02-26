@@ -213,6 +213,14 @@ def test_to_multiqc_yaml() -> None:
     assert to_multiqc_yaml(test) == expected
 
 
+def bokeh_figure(data: pandas.DataFrame) -> figure:
+    """
+    This function prduces a bokeh.models.figure object
+    which represents a box plot of count data
+    """
+    pass
+
+
 if __name__ == '__main__':
     # Build logging object and behaviour
     logging.basicConfig(

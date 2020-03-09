@@ -39,7 +39,7 @@ rule copy_extra:
     input:
         lambda wildcards: ref_link_dict[wildcards.files]
     output:
-        temp("genome/{files}")
+        temp("genomes/{files}")
     message:
         "Copying {wildcards.files} as reference"
     resources:

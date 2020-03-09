@@ -18,7 +18,8 @@ swv = "https://raw.githubusercontent.com/snakemake/snakemake-wrappers/0.49.0"
 git = "https://raw.githubusercontent.com/tdayris-perso/snakemake-wrappers"
 
 # Loading configuration
-configfile: "config.yaml"
+if config == dict():
+    configfile: "config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
 # Loading deisgn file
@@ -161,18 +162,18 @@ def refs_pack() -> Dict[str, str]:
     try:
         # GTF is present
         return {
-            "fasta": f"genome/{op.basename(config['ref']['fasta'])}",
-            "gtf": f"genome/{op.basename(config['ref']['gtf'])}"
+            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}",
+            "gtf": f"genomes/{op.basename(config['ref']['gtf'])}"
         }
     except KeyError:
         # No GTF provided !
         return {
-            "fasta": f"genome/{op.basename(config['ref']['fasta'])}"
+            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}"
         }
     except TypeError:
         # No GTF provided !
         return {
-            "fasta": f"genome/{op.basename(config['ref']['fasta'])}"
+            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}"
         }
 
 

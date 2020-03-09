@@ -8,7 +8,7 @@ params:
     \-\-noLengthCorrection \-\-fasterMapping \-\-noFragLengthDist \-\-allowDovetail
     \-\-numPreAuxModelSamples 0 \-\-numAuxModelSamples 0
 ref:
-  fasta: genome/transcriptome.fasta
+  fasta: genomes/transcriptome.fasta
   gtf: null
 singularity_docker_image: docker://continuumio/miniconda3:4.4.10
 threads: 1

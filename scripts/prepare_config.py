@@ -246,6 +246,7 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
     """
     result_dict = {
         "design": args.design,
+        "config": f"{args.workdir}/config.yaml",
         "workdir": args.workdir,
         "threads": args.threads,
         "singularity_docker_image": args.singularity,
@@ -295,6 +296,7 @@ def test_args_to_dict() -> None:
 
     expected = {
         "design": "/path/to/design",
+        "config": "/path/to/workdir/config.yaml",
         "workdir": "/path/to/workdir",
         "threads": 100,
         "singularity_docker_image": "singularity_image",

@@ -39,7 +39,7 @@ from pathlib import Path                        # Paths related methods
 from snakemake.utils import makedirs            # Easily build directories
 from typing import Dict, Generator, List, Any   # Type hints
 
-from common import *
+from common_script_rna_count_salmon import *
 
 
 # Processing functions

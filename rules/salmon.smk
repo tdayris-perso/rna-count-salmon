@@ -39,7 +39,7 @@ rule salmon_quant:
     input:
         unpack(fq_pairs_w)
     output:
-        **salmon_quant_output()
+        **salmon_quant_output(config)
     message:
         "Quantifying {wildcards.sample} with Salmon"
     resources:
@@ -55,7 +55,7 @@ rule salmon_quant:
         min(config["threads"], 12)
     params:
         libType = config["params"].get("libType", "A"),
-        extra = salmon_quant_extra()
+        extra = salmon_quant_extra(config)
     log:
         "logs/salmon/quant_{sample}.log"
     wrapper:

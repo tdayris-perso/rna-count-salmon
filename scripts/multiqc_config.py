@@ -16,7 +16,7 @@ from pathlib import Path              # Easily deal with paths
 from snakemake.utils import makedirs  # Create directories recursively
 from typing import Any, Dict          # Type hints
 
-from common import write_yaml         # Common operations in this pipeline
+from common_script_rna_count_salmon import write_yaml         # Common operations in this pipeline
 
 
 def load_qc_config(qc: Path) -> Dict[str, Any]:

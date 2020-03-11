@@ -22,7 +22,7 @@ localrules: copy_fastq, copy_extra
 
 rule all:
     input:
-        **get_targets(get_multiqc=True, get_aggreg=True,
+        **get_rcs_targets(get_multiqc=True, get_aggreg=True,
                       get_renamed=True, get_fastqc=True,
                       get_notebook=False)
     message:

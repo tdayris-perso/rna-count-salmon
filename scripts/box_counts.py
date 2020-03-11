@@ -34,7 +34,7 @@ from snakemake.utils import makedirs  # Make directories recursively
 from typing import Any, Dict, List    # Type hints
 
 # Common functions within pipeline
-from common import write_yaml, read_aggregation_table
+from common_script_rna_count_salmon import write_yaml, read_aggregation_table
 
 
 def per_sample_quantiles(data: pandas.DataFrame) -> pandas.DataFrame:

@@ -21,6 +21,7 @@ TEST_AGGREGATION = scripts/aggregate_samples.py
 TEST_TR2GENE     = scripts/transcript_to_gene.py
 TEST_NULLCOUNTS  = scripts/null_counts.py
 TEST_BOXCOUNTS   = scripts/box_counts.py
+TEST_COMMON      = scripts/common_script_rna_count_salmon.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
 TRANSCRIPT_PATH  = tests/genomes/transcriptome.fasta
@@ -50,7 +51,7 @@ conda-tests:
 all-unit-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} ${TEST_DESIGN} ${TEST_AGGREGATION} ${TEST_BOXCOUNTS} \
-	${TEST_TR2GENE} ${TEST_NULLCOUNTS}
+	${TEST_TR2GENE} ${TEST_NULLCOUNTS} ${TEST_COMMON}
 .PHONY: all-unit-tests
 
 
@@ -75,6 +76,13 @@ aggregation-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_AGGREGATION}
 .PHONY: aggregation-tests
+
+
+# Running all unit test (on common_scrit_rna_count_salmon.py only)
+common-tests:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTEST} ${PYTEST_ARGS} ${TEST_COMMON}
+.PHONY: common-tests
 
 
 # Running all unit test (on transcript_to_gene.py only)

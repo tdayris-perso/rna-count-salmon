@@ -36,7 +36,7 @@ from pathlib import Path              # Paths related methods
 from snakemake.utils import makedirs  # Easily build directories
 from typing import Dict, Any          # Typing hints
 
-from common import *
+from common_script_rna_count_salmon import *
 
 
 def parser() -> argparse.ArgumentParser:

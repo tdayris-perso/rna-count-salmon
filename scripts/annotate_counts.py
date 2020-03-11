@@ -12,7 +12,7 @@ import sys      # Handle system interactions
 
 from pathlib import Path                   # Easily deal with paths
 from snakemake.utils import makedirs       # Create directories recursively
-from common import read_aggregation_table  # Common operations in this pipeline
+from common_script_rna_count_salmon import read_aggregation_table  # Common operations in this pipeline
 
 
 if __name__ == '__main__':

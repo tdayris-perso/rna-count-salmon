@@ -16,7 +16,6 @@ from snakemake.utils import validate   # Check Yaml/TSV formats
 try:
     from common_rna_count_salmon import *
 except ImportError:
-    print(f"Could not find common.py in {script_path}")
     print(locals())
     raise
 

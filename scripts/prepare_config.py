@@ -245,9 +245,9 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
      'workflow': {'aggregate': False, 'fastqc': True, 'multiqc': True}}
     """
     result_dict = {
-        "design": args.design,
-        "config": f"{args.workdir}/config.yaml",
-        "workdir": args.workdir,
+        "design": os.path.abspath(args.design),
+        "config": os.path.abspath(os.path.join(args.workdir, "config.yaml")),
+        "workdir": os.path.abspath(args.workdir),
         "threads": args.threads,
         "singularity_docker_image": args.singularity,
         "cold_storage": args.cold_storage,

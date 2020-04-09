@@ -40,8 +40,7 @@ rule aggregate_salmon_gene_counts:
     log:
         "logs/aggregation/aggregate_{ext}.log"
     wrapper:
-        #f"{git}/bio/pandas/salmon"
-        "file:/home/tdayris/Documents/Developments/snakemake-wrappers/bio/pandas/salmon/"
+        f"{git}/bio/pandas/salmon"
 
 
 """

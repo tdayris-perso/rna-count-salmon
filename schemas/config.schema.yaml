@@ -39,6 +39,7 @@ ref:
       description: A path to a GTF formatted genome annotation (NO GFF)
   required:
     - fasta
+    - gtf
 
 params:
   type: object

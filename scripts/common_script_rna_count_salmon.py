@@ -171,39 +171,20 @@ def ref_link(config: Dict[str, Any]) -> Dict[str, str]:
     a dictionnary with:
     ref file name : ref path
     """
-    # If not GTF is provided, error will be raised.
-    try:
-        # Case GTF is provided
-        fasta = config["ref"]["fasta"]
-        gtf = config["ref"]["gtf"]
-        return {
-            op.basename(fasta): op.realpath(fasta),
-            op.basename(gtf): op.realpath(gtf)
-        }
-    except KeyError:
-        # Case GTF is missing
-        fasta = config["ref"]["fasta"]
-        return {
-            op.basename(fasta): op.realpath(fasta)
-        }
-    except TypeError:
-        # Case GTF is missing
-        fasta = config["ref"]["fasta"]
-        return {
-            op.basename(fasta): op.realpath(fasta)
-        }
+    fasta = config["ref"]["fasta"]
+    gtf = config["ref"]["gtf"]
+    return {
+        op.basename(fasta): op.realpath(fasta),
+        op.basename(gtf): op.realpath(gtf)
+    }
 
 
 @pytest.mark.parametrize(
     "config, expected", [
         ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
          {"fasta.fa": "/path/to/fasta.fa", "gtf.gtf": "/path/to/gtf.gtf"}),
-        ({"ref": {"fasta": "/path/to/fasta.fa"}},
-         {"fasta.fa": "/path/to/fasta.fa"}),
-        ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": None}},
-         {"fasta.fa": "/path/to/fasta.fa"}),
-        ({"ref": {"fasta": "path/to/fasta.fa"}},
-         {"fasta.fa": op.abspath("path/to/fasta.fa")}),
+        ({"ref": {"fasta": "path/to/fasta.fa", "gtf": "path/to/gtf.gtf"}},
+         {"fasta.fa": op.abspath("path/to/fasta.fa"), "gtf.gtf": op.abspath("path/to/gtf.gtf")}),
     ]
 )
 def test_ref_link(config: Dict[str, Any], expected: Dict[str, str]) -> None:
@@ -285,36 +266,16 @@ def refs_pack(config: Dict[str, Any]) -> Dict[str, str]:
     """
     Return a dictionnary with references
     """
-    # Will cause KeyError if no GTF is given.
-    # Better ask forgiveness than permission !
-    try:
-        # GTF is present
-        return {
-            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}",
-            "gtf": f"genomes/{op.basename(config['ref']['gtf'])}"
-        }
-    except KeyError:
-        # No GTF provided !
-        return {
-            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}"
-        }
-    except TypeError:
-        # No GTF provided !
-        return {
-            "fasta": f"genomes/{op.basename(config['ref']['fasta'])}"
-        }
+    return {
+        "fasta": f"genomes/{op.basename(config['ref']['fasta'])}",
+        "gtf": f"genomes/{op.basename(config['ref']['gtf'])}"
+    }
 
 
 @pytest.mark.parametrize(
     "config, expected", [
         ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
-         {"fasta": "genomes/fasta.fa", "gtf": "genomes/gtf.gtf"}),
-        ({"ref": {"fasta": "/path/to/fasta.fa"}},
-         {"fasta": "genomes/fasta.fa"}),
-        ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": None}},
-         {"fasta": "genomes/fasta.fa"}),
-        ({"ref": {"fasta": "path/to/fasta.fa"}},
-         {"fasta": "genomes/fasta.fa"}),
+         {"fasta": "genomes/fasta.fa", "gtf": "genomes/gtf.gtf"})
     ]
 )
 def test_ref_pack(config: Dict[str, Any], expected: Dict[str, str]) -> None:
@@ -329,26 +290,12 @@ def salmon_quant_extra(config: Dict[str, Any]) -> str:
     Return the corrected list of parameters for kallist quant
     """
     base = config["params"].get("salmon_quant_extra", "")
-    try:
-        if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
-            base = f"{base} --geneMap {str(config['ref']['gtf'])}"
-    except KeyError:
-        pass
-
-    return base
+    return f"{base} --geneMap genomes/{op.basename(config['ref']['gtf'])}"
 
 @pytest.mark.parametrize(
     "config, expected", [
         ({"params": {}, "ref": {"gtf": "genomes/gtf.gtf"}},
          " --geneMap genomes/gtf.gtf"),
-        ({"params": {}, "ref": {"gtf": None}},
-         ""),
-        ({"params": {"salmon_quant_extra": "salmon args"}, "ref": {}},
-         "salmon args"),
-        ({"params": {"salmon_quant_extra": "salmon args"},
-          "ref": {"gtf": "genomes/gtf.gtf"}},
-         "salmon args --geneMap genomes/gtf.gtf"),
-        ({"params": {}}, ""),
     ]
 )
 def test_salmon_quant_extra(config: Dict[str, Any], expected: str) -> None:

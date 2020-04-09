@@ -57,6 +57,12 @@ def parser() -> argparse.ArgumentParser:
         type=str,
     )
 
+    main_parser.add_argument(
+        "gtf",
+        help="Path to GTF-formatted genome annotation",
+        type=str
+    )
+
     # Parsing optional arguments
     main_parser.add_argument(
         "--design",
@@ -95,13 +101,6 @@ def parser() -> argparse.ArgumentParser:
         nargs="+",
         type=str,
         default=[" "]
-    )
-
-    main_parser.add_argument(
-        "--gtf",
-        help="Path to GTF-formatted genome annotation (default: %(default)s)",
-        default=None,
-        type=str
     )
 
     main_parser.add_argument(
@@ -194,14 +193,14 @@ def test_parse_args() -> None:
     Example:
     >>> pytest -v prepare_config.py -k test_parse_args
     """
-    options = parse_args(shlex.split("/path/to/fasta"))
+    options = parse_args(shlex.split("/path/to/fasta /path/to/gtf"))
     expected = argparse.Namespace(
         aggregate=False,
         cold_storage=[' '],
         debug=False,
         design='design.tsv',
         fasta='/path/to/fasta',
-        gtf=None,
+        gtf='/path/to/gtf',
         libType='A',
         no_fastqc=False,
         no_multiqc=False,
@@ -281,12 +280,12 @@ def test_args_to_dict() -> None:
     """
     options = parse_args(shlex.split(
         "/path/to/fasta "
+        " /path/to/gtf "
         "--design /path/to/design "
         "--workdir /path/to/workdir "
         "--threads 100 "
         "--singularity singularity_image "
         "--cold-storage /path/cold/one /path/cold/two "
-        "--gtf /path/to/gtf "
         "--no-fastqc "
         "--aggregate "
         "--salmon-index-extra ' --index-arg 1 ' "

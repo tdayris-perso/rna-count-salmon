@@ -30,7 +30,7 @@ rule copy_fastq:
         extra = config["params"].get("copy_extra", ""),
         cold_storage = config.get("cold_storage", "NONE")
     wrapper:
-        f"{git}/cp/bio/cp"
+        f"{git}/bio/cp"
 
 """
 Same remarks as the above. Here, we copy the reference files.
@@ -59,4 +59,4 @@ rule copy_extra:
         extra = config["params"].get("copy_extra", ""),
         cold_storage = config.get("cold_storage", "NONE")
     wrapper:
-        f"{git}/cp/bio/cp"
+        f"{git}/bio/cp"

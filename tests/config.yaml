@@ -9,8 +9,8 @@ params:
     --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples
     0 --numAuxModelSamples 0 '
 ref:
-  fasta: /home/tdayris/Documents/Developments/rna-count-salmon/tests/genomes/transcriptome.fasta
-  gtf: /home/tdayris/Documents/Developments/rna-count-salmon/tests/genomes/transcriptome.gtf
+  fasta: /home/tdayris/Documents/Developments/rna-count-salmon/tests/genome/transcriptome.fasta
+  gtf: /home/tdayris/Documents/Developments/rna-count-salmon/tests/genome/annot.gtf
 singularity_docker_image: docker://continuumio/miniconda3:4.4.10
 threads: 1
 workdir: /home/tdayris/Documents/Developments/rna-count-salmon/tests

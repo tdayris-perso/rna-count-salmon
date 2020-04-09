@@ -14,10 +14,10 @@ rule salmon_index:
         "Indexing {input.fasta} with Salmon"
     resources:
         mem_mb = (
-            lambda wildcards, attempt: min(attempt * 2048 + 10240, 35580)
+            lambda wildcards, attempt: attempt * 2048 + 10240
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 15 + 60, 180)
+            lambda wildcards, attempt: attempt * 15 + 60
         )
     threads:
         min(config["threads"], 12)
@@ -39,15 +39,16 @@ rule salmon_quant:
     input:
         unpack(fq_pairs_w)
     output:
-        **salmon_quant_output(config)
+        quant = "pseudo_mapping/{sample}/quant.sf",
+        quant_genes = "pseudo_mapping/{sample}/quant.genes.sf"
     message:
         "Quantifying {wildcards.sample} with Salmon"
     resources:
         mem_mb = (
-            lambda wildcards, attempt: min(attempt * 5120 + 2048, 20480)
+            lambda wildcards, attempt: attempt * 5120 + 2048
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 15 + 75, 180)
+            lambda wildcards, attempt: attempt * 15 + 75
         )
     wildcard_constraints:
         sample = sample_constraint
@@ -77,10 +78,10 @@ rule salmon_quant_rename:
         1
     resources:
         mem_mb = (
-            lambda wildcards, attempt: min(attempt * 256 + 256, 1024)
+            lambda wildcards, attempt: attempt * 256 + 256
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 3 + 7, 10)
+            lambda wildcards, attempt: attempt * 3 + 7
         )
     wildcard_constraints:
         sample = sample_constraint

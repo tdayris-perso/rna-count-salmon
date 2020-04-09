@@ -20,9 +20,9 @@ except ImportError:
     raise
 
 # Snakemake-Wrappers version
-swv = "https://raw.githubusercontent.com/snakemake/snakemake-wrappers/0.49.0"
+swv = "https://raw.githubusercontent.com/snakemake/snakemake-wrappers/0.51.0"
 # github prefix
-git = "https://raw.githubusercontent.com/tdayris-perso/snakemake-wrappers"
+git = "https://raw.githubusercontent.com/tdayris/snakemake-wrappers/Unofficial"
 
 # Loading configuration
 if config == dict():
@@ -59,9 +59,7 @@ def get_rcs_targets(get_fastqc: bool = False,
                     get_aggreg: bool = False,
                     get_multiqc: bool = False,
                     get_renamed: bool = False,
-                    get_quant: bool = False,
-                    get_qc_config: bool = False,
-                    get_notebook: bool = False) -> Dict[str, Any]:
+                    get_quant: bool = False) -> Dict[str, Any]:
     """
     This function returns the targets of Snakemake
     following the requests from the user.
@@ -77,26 +75,11 @@ def get_rcs_targets(get_fastqc: bool = False,
     if config["workflow"]["multiqc"] is True and get_multiqc is True:
         targets["multiqc"] = "qc/multiqc_report.html"
 
-    if get_qc_config is True and config["workflow"]["multiqc"] is True:
-        targets["qc_conf"] = "qc/multiqc_configs/complete_multiqc_config.yaml"
-
     if config["workflow"]["aggregate"] is True and get_aggreg is True:
-        try:
-            if config["ref"]["gtf"] != "" and config["ref"]["gtf"] is not None:
-                targets["aggregation_tr"] = expand(
-                    "aggregated_salmon_counts/{file}.sf.annotated.tsv",
-                    file=["NumReads", "TPM"]
-                )
-
-                targets["aggregation_ge"] = expand(
-                    "aggregated_salmon_counts/{file}.genes.sf.annotated.tsv",
-                    file=["NumReads", "TPM"]
-                )
-        except KeyError:
-            targets["aggregation_tr"] = expand(
-                "aggregated_salmon_counts/{file}.sf.tsv",
-                file=["NumReads", "TPM"]
-            )
+        targets["aggregation"] = expand(
+            "pseudo_mapping/aggregation/TPM{ext}.tsv",
+            ext=["", ".genes"]
+        )
 
     if get_renamed is True:
         targets["quant_renamed"] = expand(
@@ -109,9 +92,6 @@ def get_rcs_targets(get_fastqc: bool = False,
             "pseudo_mapping/{sample}/quant.sf",
             sample=sample_id_list
         )
-
-    if get_notebook is True:
-        targets["notebook"] = "notebook/notebook.html"
 
     return targets
 

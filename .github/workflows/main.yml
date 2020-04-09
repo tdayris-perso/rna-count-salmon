@@ -34,5 +34,3 @@ jobs:
         run: make clean
       - name: Run workflow in Singularity
         run: make test-singularity-report.html
-      - name: Clean again
-        run: make clean

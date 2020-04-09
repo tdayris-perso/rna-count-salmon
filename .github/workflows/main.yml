@@ -36,5 +36,3 @@ jobs:
         run: make test-singularity-report.html
       - name: Clean again
         run: make clean
-      - name: Test without GTF
-        run: make test-no-gtf-report.html

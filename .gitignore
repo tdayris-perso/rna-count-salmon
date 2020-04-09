@@ -10,7 +10,6 @@ tests/*.png
 tests/*.html
 tests/*.stats*
 tests/salmon_index/
-tests/genome/
 */__pycache__/*
 *.pytest_cache*
 logs/*

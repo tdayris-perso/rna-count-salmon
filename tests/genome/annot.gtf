@@ -1,0 +1,4 @@
+chr_Sheila	Fake	gene	1	20	.	+	0	gene_id "Sg001"; gene_name "Sheila_Gene";
+chr_Sheila	Fake	transcript	1	20	.	+	0	gene_id "Sg001"; transcript_id "Sheila"; gene_name "Sheila_Gene";
+chr_Sheila	Fake	exon	4	10	.	+	0	gene_id "Sg001"; transcript_id "Sheila"; exon_id "001.e1"; gene_name "Sheila_Gene";
+chr_Sheila	Fake	exon	14	20	.	+	0	gene_id "Sg001"; transcript_id "Sheila"; exon_id "001.e2"; gene_name "Sheila_Gene";

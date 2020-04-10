@@ -7,23 +7,25 @@ This script contains functions that are to be called by any other scripts in
 this pipeline.
 """
 
-import argparse        # Argument parsing
-import logging         # Logging behaviour
-import pandas          # Handle large datasets
+import argparse  # Argument parsing
+import logging  # Logging behaviour
+import pandas  # Handle large datasets
 import pytest
-import yaml            # Handle Yaml IO
+import yaml  # Handle Yaml IO
 
-import os.path as op    # Path and file system manipulation
-import pandas           # Deal with TSV files (design)
+import os.path as op  # Path and file system manipulation
+import pandas  # Deal with TSV files (design)
 
-from itertools import chain                # Chain iterators
-from pathlib import Path                   # Easily handle paths
-from typing import Any, Dict, List, Optional, Union # Type hints
+from itertools import chain  # Chain iterators
+from pathlib import Path  # Easily handle paths
+from typing import Any, Dict, List, Optional, Union  # Type hints
 
 
 # Building custom class for help formatter
-class CustomFormatter(argparse.RawDescriptionHelpFormatter,
-                      argparse.ArgumentDefaultsHelpFormatter):
+class CustomFormatter(
+        argparse.RawDescriptionHelpFormatter,
+        argparse.ArgumentDefaultsHelpFormatter
+    ):
     """
     This class is used only to allow line breaks in the documentation,
     without breaking the classic argument formatting.
@@ -47,8 +49,7 @@ def read_aggregation_table(count: str) -> pandas.DataFrame:
 
     # Load dataset
     data = pandas.read_csv(
-        count_table,
-        sep="\t",
+        count_table, sep="\t",
         index_col=0,
         header=0
     )
@@ -74,25 +75,37 @@ def fq_link(design: pandas.DataFrame) -> Dict[str, str]:
         # Single ended case
         fq_list = design["Upstream_file"]
 
-    return {
-        op.basename(fq): op.realpath(fq)
-        for fq in fq_list
-    }
+    return {op.basename(fq): op.realpath(fq) for fq in fq_list}
 
 
 @pytest.mark.parametrize(
-    "design, expected", [
-        (pandas.DataFrame({"S1": {"Upstream_file": "/path/to/S1_R1.fq",
-                                  "Downstream_file": "/other/to/S1_R2.fq"}}).T,
-         {"S1_R1.fq": "/path/to/S1_R1.fq", "S1_R2.fq": "/other/to/S1_R2.fq"}),
-        (pandas.DataFrame({"S1": {"Upstream_file": "/path/to/S1_R1.fq"}}).T,
-         {"S1_R1.fq": "/path/to/S1_R1.fq"}),
-        (pandas.DataFrame({"S1": {"Upstream_file": "path/to/S1_R1.fq"}}).T,
-         {"S1_R1.fq": op.abspath("path/to/S1_R1.fq")})
-    ]
+    "design, expected",
+    [
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Upstream_file": "/path/to/S1_R1.fq",
+                        "Downstream_file": "/other/to/S1_R2.fq",
+                    }
+                }
+            ).T,
+            {"S1_R1.fq": "/path/to/S1_R1.fq", "S1_R2.fq": "/other/to/S1_R2.fq"},
+        ),
+        (
+            pandas.DataFrame({"S1": {"Upstream_file": "/path/to/S1_R1.fq"}}).T,
+            {"S1_R1.fq": "/path/to/S1_R1.fq"},
+        ),
+        (
+            pandas.DataFrame({"S1": {"Upstream_file": "path/to/S1_R1.fq"}}).T,
+            {"S1_R1.fq": op.abspath("path/to/S1_R1.fq")},
+        ),
+    ],
 )
-def test_fq_link(design: pandas.DataFrame,
-                 expected: Optional[Dict[str, str]]) -> None:
+def test_fq_link(
+        design: pandas.DataFrame,
+        expected: Optional[Dict[str, str]]
+    ) -> None:
     """
     Test the function fq_link with multiple data
     """
@@ -124,7 +137,7 @@ def fq_root(design: pandas.DataFrame) -> Dict[str, str]:
         for ext in possible_ext:
             if fq_file.endswith(ext):
                 # Extension removal
-                base = op.basename(fq_file)[:-(len(ext) + 1)]
+                base = op.basename(fq_file)[: -(len(ext) + 1)]
                 result[base] = f"raw_data/{op.basename(fq_file)}"
                 break
         else:
@@ -134,31 +147,48 @@ def fq_root(design: pandas.DataFrame) -> Dict[str, str]:
 
 
 @pytest.mark.parametrize(
-    "design, expected", [
-        (pandas.DataFrame(
-            {"S1": {"Upstream_file": "/path/to/S1_R1.fq.gz",
-                    "Downstream_file": "/other/to/S1_R2.fq.gz"}}
-         ).T,
-         {"S1_R1": "raw_data/S1_R1.fq.gz",
-          "S1_R2": "raw_data/S1_R2.fq.gz"}),
-        (pandas.DataFrame(
-            {"S1": {"Upstream_file": "/path/to/S1_R1.fastq.gz",
-                    "Downstream_file": "/other/to/S1_R2.fastq.gz"}}
-         ).T,
-         {"S1_R1": "raw_data/S1_R1.fastq.gz",
-          "S1_R2": "raw_data/S1_R2.fastq.gz"}),
-        (pandas.DataFrame(
-            {"S1": {"Upstream_file": "/path/to/S1_R1.fastq.gz"}}
-         ).T,
-         {"S1_R1": "raw_data/S1_R1.fastq.gz"}),
-        (pandas.DataFrame(
-            {"S1": {"Upstream_file": "/path/to/S1_R1.fastq"}}
-         ).T,
-         {"S1_R1": "raw_data/S1_R1.fastq"})
-    ]
+    "design, expected",
+    [
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Upstream_file": "/path/to/S1_R1.fq.gz",
+                        "Downstream_file": "/other/to/S1_R2.fq.gz",
+                    }
+                }
+            ).T,
+            {"S1_R1": "raw_data/S1_R1.fq.gz", "S1_R2": "raw_data/S1_R2.fq.gz"},
+        ),
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Upstream_file": "/path/to/S1_R1.fastq.gz",
+                        "Downstream_file": "/other/to/S1_R2.fastq.gz",
+                    }
+                }
+            ).T,
+            {
+                "S1_R1": "raw_data/S1_R1.fastq.gz",
+                "S1_R2": "raw_data/S1_R2.fastq.gz",
+            },
+        ),
+        (
+            pandas.DataFrame(
+                {"S1": {"Upstream_file": "/path/to/S1_R1.fastq.gz"}}
+            ).T,
+            {"S1_R1": "raw_data/S1_R1.fastq.gz"},
+        ),
+        (
+            pandas.DataFrame(
+                {"S1": {"Upstream_file": "/path/to/S1_R1.fastq"}}
+            ).T,
+            {"S1_R1": "raw_data/S1_R1.fastq"},
+        ),
+    ],
 )
-def test_fq_root(design: pandas.DataFrame,
-                 expected: Dict[str, str]) -> None:
+def test_fq_root(design: pandas.DataFrame, expected: Dict[str, str]) -> None:
     """
     Test the function fq_root with multiple data
     """
@@ -175,17 +205,25 @@ def ref_link(config: Dict[str, Any]) -> Dict[str, str]:
     gtf = config["ref"]["gtf"]
     return {
         op.basename(fasta): op.realpath(fasta),
-        op.basename(gtf): op.realpath(gtf)
+        op.basename(gtf): op.realpath(gtf),
     }
 
 
 @pytest.mark.parametrize(
-    "config, expected", [
-        ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
-         {"fasta.fa": "/path/to/fasta.fa", "gtf.gtf": "/path/to/gtf.gtf"}),
-        ({"ref": {"fasta": "path/to/fasta.fa", "gtf": "path/to/gtf.gtf"}},
-         {"fasta.fa": op.abspath("path/to/fasta.fa"), "gtf.gtf": op.abspath("path/to/gtf.gtf")}),
-    ]
+    "config, expected",
+    [
+        (
+            {"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
+            {"fasta.fa": "/path/to/fasta.fa", "gtf.gtf": "/path/to/gtf.gtf"},
+        ),
+        (
+            {"ref": {"fasta": "path/to/fasta.fa", "gtf": "path/to/gtf.gtf"}},
+            {
+                "fasta.fa": op.abspath("path/to/fasta.fa"),
+                "gtf.gtf": op.abspath("path/to/gtf.gtf"),
+            },
+        ),
+    ],
 )
 def test_ref_link(config: Dict[str, Any], expected: Dict[str, str]) -> None:
     """
@@ -206,21 +244,18 @@ def fq_pairs(design: pandas.DataFrame) -> Dict[str, str]:
         iterator = zip(
             design["Sample_id"],
             design["Upstream_file"],
-            design["Downstream_file"]
+            design["Downstream_file"],
         )
         return {
             name: {
                 "r1": f"raw_data/{op.basename(fq1)}",
-                "r2": f"raw_data/{op.basename(fq2)}"
+                "r2": f"raw_data/{op.basename(fq2)}",
             }
             for name, fq1, fq2 in iterator
         }
     except KeyError:
         # Single end case
-        iterator = zip(
-            design["Sample_id"],
-            design["Upstream_file"]
-        )
+        iterator = zip(design["Sample_id"], design["Upstream_file"])
         return {
             name: {"r": f"raw_data/{op.basename(fq1)}"}
             for name, fq1 in iterator
@@ -228,32 +263,63 @@ def fq_pairs(design: pandas.DataFrame) -> Dict[str, str]:
 
 
 @pytest.mark.parametrize(
-    "design, expected", [
-        (pandas.DataFrame(
-            {"S1": {"Sample_id": "S1",
-                    "Upstream_file": "/path/to/S1_R1.fq.gz",
-                    "Downstream_file": "/other/to/S1_R2.fq.gz"}}
-         ).T,
-         {"S1": {"r1": "raw_data/S1_R1.fq.gz",
-                 "r2": "raw_data/S1_R2.fq.gz"}}),
-        (pandas.DataFrame(
-            {"S1": {"Sample_id": "S1",
-                    "Upstream_file": "/path/to/S1_R1.fq.gz"}}
-         ).T,
-         {"S1": {"r": "raw_data/S1_R1.fq.gz"}}),
-        (pandas.DataFrame(
-            {"S1": {"Sample_id": "S1",
-                    "Upstream_file": "/path/to/S1_R1.fq.gz",
-                    "Downstream_file": "/other/to/S1_R2.fq.gz"},
-             "S2": {"Sample_id": "S2",
-                    "Upstream_file": "/path/to/S2_R1.fq.gz",
-                    "Downstream_file": "/other/to/S2_R2.fq.gz"}}
-         ).T,
-         {"S1": {"r1": "raw_data/S1_R1.fq.gz",
-                 "r2": "raw_data/S1_R2.fq.gz"},
-          "S2": {"r1": "raw_data/S2_R1.fq.gz",
-                 "r2": "raw_data/S2_R2.fq.gz"}})
-    ]
+    "design, expected",
+    [
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Sample_id": "S1",
+                        "Upstream_file": "/path/to/S1_R1.fq.gz",
+                        "Downstream_file": "/other/to/S1_R2.fq.gz",
+                    }
+                }
+            ).T,
+            {
+                "S1": {
+                    "r1": "raw_data/S1_R1.fq.gz",
+                    "r2": "raw_data/S1_R2.fq.gz",
+                }
+            },
+        ),
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Sample_id": "S1",
+                        "Upstream_file": "/path/to/S1_R1.fq.gz",
+                    }
+                }
+            ).T,
+            {"S1": {"r": "raw_data/S1_R1.fq.gz"}},
+        ),
+        (
+            pandas.DataFrame(
+                {
+                    "S1": {
+                        "Sample_id": "S1",
+                        "Upstream_file": "/path/to/S1_R1.fq.gz",
+                        "Downstream_file": "/other/to/S1_R2.fq.gz",
+                    },
+                    "S2": {
+                        "Sample_id": "S2",
+                        "Upstream_file": "/path/to/S2_R1.fq.gz",
+                        "Downstream_file": "/other/to/S2_R2.fq.gz",
+                    },
+                }
+            ).T,
+            {
+                "S1": {
+                    "r1": "raw_data/S1_R1.fq.gz",
+                    "r2": "raw_data/S1_R2.fq.gz",
+                },
+                "S2": {
+                    "r1": "raw_data/S2_R1.fq.gz",
+                    "r2": "raw_data/S2_R2.fq.gz",
+                },
+            },
+        ),
+    ],
 )
 def test_fq_pairs(design: pandas.DataFrame, expected: Dict[str, Any]) -> None:
     """
@@ -268,15 +334,18 @@ def refs_pack(config: Dict[str, Any]) -> Dict[str, str]:
     """
     return {
         "fasta": f"genomes/{op.basename(config['ref']['fasta'])}",
-        "gtf": f"genomes/{op.basename(config['ref']['gtf'])}"
+        "gtf": f"genomes/{op.basename(config['ref']['gtf'])}",
     }
 
 
 @pytest.mark.parametrize(
-    "config, expected", [
-        ({"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
-         {"fasta": "genomes/fasta.fa", "gtf": "genomes/gtf.gtf"})
-    ]
+    "config, expected",
+    [
+        (
+            {"ref": {"fasta": "/path/to/fasta.fa", "gtf": "/path/to/gtf.gtf"}},
+            {"fasta": "genomes/fasta.fa", "gtf": "genomes/gtf.gtf"},
+        )
+    ],
 )
 def test_ref_pack(config: Dict[str, Any], expected: Dict[str, str]) -> None:
     """
@@ -292,11 +361,15 @@ def salmon_quant_extra(config: Dict[str, Any]) -> str:
     base = config["params"].get("salmon_quant_extra", "")
     return f"{base} --geneMap genomes/{op.basename(config['ref']['gtf'])}"
 
+
 @pytest.mark.parametrize(
-    "config, expected", [
-        ({"params": {}, "ref": {"gtf": "genomes/gtf.gtf"}},
-         " --geneMap genomes/gtf.gtf"),
-    ]
+    "config, expected",
+    [
+        (
+            {"params": {}, "ref": {"gtf": "genomes/gtf.gtf"}},
+            " --geneMap genomes/gtf.gtf",
+        ),
+    ],
 )
 def test_salmon_quant_extra(config: Dict[str, Any], expected: str) -> None:
     """
@@ -322,15 +395,18 @@ def salmon_quant_output(config: Dict[str, Any]) -> str:
 
 
 @pytest.mark.parametrize(
-    "config, expected", [
-        ({"ref": {"gtf": "genomes/annot.gtf"}},
-         {"quant": "pseudo_mapping/{sample}/quant.sf",
-          "quant_genes": "pseudo_mapping/{sample}/quant.genes.sf"}),
-        ({"ref": {}},
-         {"quant": "pseudo_mapping/{sample}/quant.sf"}),
-        ({"ref": {"gtf": None}},
-         {"quant": "pseudo_mapping/{sample}/quant.sf"})
-    ]
+    "config, expected",
+    [
+        (
+            {"ref": {"gtf": "genomes/annot.gtf"}},
+            {
+                "quant": "pseudo_mapping/{sample}/quant.sf",
+                "quant_genes": "pseudo_mapping/{sample}/quant.genes.sf",
+            },
+        ),
+        ({"ref": {}}, {"quant": "pseudo_mapping/{sample}/quant.sf"}),
+        ({"ref": {"gtf": None}}, {"quant": "pseudo_mapping/{sample}/quant.sf"}),
+    ],
 )
 def test_salmon_quant_output(config: Dict[str, Any], expected: str) -> None:
     """

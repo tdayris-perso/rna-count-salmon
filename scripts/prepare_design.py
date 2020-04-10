@@ -27,25 +27,26 @@ python3.7 ./prepare_design.py tests/reads
 python3.7 ./prepare_design.py tests --recursive
 """
 
-import argparse           # Parse command line
-import logging            # Traces and loggings
-import os                 # OS related activities
-import pandas as pd       # Parse TSV files
-import pytest             # Unit testing
-import shlex              # Lexical analysis
-import sys                # System related methods
+import argparse  # Parse command line
+import logging  # Traces and loggings
+import os  # OS related activities
+import pandas as pd  # Parse TSV files
+import pytest  # Unit testing
+import shlex  # Lexical analysis
+import sys  # System related methods
 
-from pathlib import Path                        # Paths related methods
-from snakemake.utils import makedirs            # Easily build directories
-from typing import Dict, Generator, List, Any   # Type hints
+from pathlib import Path  # Paths related methods
+from snakemake.utils import makedirs  # Easily build directories
+from typing import Dict, Generator, List, Any  # Type hints
 
 from common_script_rna_count_salmon import *
 
 
 # Processing functions
 # Looking for fastq files
-def search_fq(fq_dir: Path,
-              recursive: bool = False) -> Generator[str, str, None]:
+def search_fq(
+    fq_dir: Path, recursive: bool = False
+) -> Generator[str, str, None]:
     """
     Iterate over a directory and search for fastq files
 
@@ -131,7 +132,7 @@ def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
         for fq in fq_files:
             fq_dict[fq.name] = {
                 "Sample_id": fq.stem,
-                "Upstream_file": fq.absolute()
+                "Upstream_file": fq.absolute(),
             }
     else:
         # Case pairs of fastq are used
@@ -140,7 +141,7 @@ def classify_fq(fq_files: List[Path], paired: bool = True) -> Dict[str, Path]:
             fq_dict[fq1.name] = {
                 "Sample_id": fq1.stem,
                 "Upstream_file": fq1.absolute(),
-                "Downstream_file": fq2.absolute()
+                "Downstream_file": fq2.absolute(),
             }
     logging.debug(fq_dict)
     return fq_dict
@@ -157,16 +158,16 @@ def test_classify_fq():
     prefix = Path(__file__).parent.parent
     fq_list = sorted(list(search_fq(prefix / "tests" / "reads")))
     expected = {
-        'A_R1.fastq': {
-            'Sample_id': 'A_R1',
-            'Upstream_file': prefix / "tests" / "reads" / "A_R1.fastq",
-            'Downstream_file': prefix / "tests" / "reads" / 'A_R2.fastq'
+        "A_R1.fastq": {
+            "Sample_id": "A_R1",
+            "Upstream_file": prefix / "tests" / "reads" / "A_R1.fastq",
+            "Downstream_file": prefix / "tests" / "reads" / "A_R2.fastq",
         },
-        'B_R1.fastq': {
-            'Sample_id': 'B_R1',
-            'Upstream_file': prefix / "tests" / "reads" / 'B_R1.fastq',
-            'Downstream_file': prefix / "tests" / "reads" / 'B_R2.fastq'
-        }
+        "B_R1.fastq": {
+            "Sample_id": "B_R1",
+            "Upstream_file": prefix / "tests" / "reads" / "B_R1.fastq",
+            "Downstream_file": prefix / "tests" / "reads" / "B_R2.fastq",
+        },
     }
 
     assert classify_fq(fq_list) == expected
@@ -193,7 +194,7 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     main_parser = argparse.ArgumentParser(
         description=sys.modules[__name__].__doc__,
         formatter_class=CustomFormatter,
-        epilog="This script does not perform any magic. Check the result."
+        epilog="This script does not perform any magic. Check the result.",
     )
 
     # Required arguments
@@ -205,38 +206,43 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
 
     # Optional arguments
     main_parser.add_argument(
-        "-s", "--single",
+        "-s",
+        "--single",
         help="The samples are single ended rnaseq reads, not pair ended",
-        action="store_true"
+        action="store_true",
     )
 
     main_parser.add_argument(
-        "-r", "--recursive",
+        "-r",
+        "--recursive",
         help="Recursively search in sub-directories for fastq files",
-        action="store_true"
+        action="store_true",
     )
 
     main_parser.add_argument(
-        "-o", "--output",
+        "-o",
+        "--output",
         help="Path to output file (default: %(default)s)",
         type=str,
-        default="design.tsv"
+        default="design.tsv",
     )
 
     # Logging options
     log = main_parser.add_mutually_exclusive_group()
     log.add_argument(
-        "-d", "--debug",
+        "-d",
+        "--debug",
         help="Set logging in debug mode",
         default=False,
-        action='store_true'
+        action="store_true",
     )
 
     log.add_argument(
-        "-q", "--quiet",
+        "-q",
+        "--quiet",
         help="Turn off logging behaviour",
         default=False,
-        action='store_true'
+        action="store_true",
     )
 
     # Parsing command lines
@@ -253,11 +259,11 @@ def test_parse_args() -> None:
     options = parse_args(shlex.split("/path/to/fastq/dir/"))
     expected = argparse.Namespace(
         debug=False,
-        output='design.tsv',
-        path='/path/to/fastq/dir/',
+        output="design.tsv",
+        path="/path/to/fastq/dir/",
         quiet=False,
         recursive=False,
-        single=False
+        single=False,
     )
     assert options == expected
 
@@ -289,7 +295,7 @@ def main(args: argparse.ArgumentParser) -> None:
 
 
 # Running programm if not imported
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Parsing command line
     args = parse_args()
 
@@ -297,9 +303,7 @@ if __name__ == '__main__':
 
     # Build logging object and behaviour
     logging.basicConfig(
-        filename="logs/prepare/design.log",
-        filemode="w",
-        level=logging.DEBUG
+        filename="logs/prepare/design.log", filemode="w", level=logging.DEBUG
     )
 
     try:

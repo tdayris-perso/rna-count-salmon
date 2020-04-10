@@ -78,12 +78,18 @@ rule salmon_quant_rename:
         1
     resources:
         mem_mb = (
-            lambda wildcards, attempt: attempt * 256 + 256
+            lambda wildcards, attempt: attempt * 256 + 128
         ),
         time_min = (
-            lambda wildcards, attempt: attempt * 3 + 7
+            lambda wildcards, attempt: attempt * 3 + 2
         )
+    log:
+        "logs/salmon/rename/{sample}.log"
+    conda:
+        "../envs/bash.yaml"
+    params:
+        pwd = os.getcwd()
     wildcard_constraints:
         sample = sample_constraint
     shell:
-        "ln -s ${{PWD}}/{input} ${{PWD}}/{output}"
+        "ln --verbose --symbolic {params.pwd}/{input} {params.pwd}/{output} > {log} 2>&1"

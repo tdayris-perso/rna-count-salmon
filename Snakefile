@@ -16,12 +16,12 @@ include: "rules/salmon.smk"
 include: "rules/aggregation.smk"
 
 workdir: config["workdir"]
-singularity: config["singularity_docker_image"]
+container: config["singularity_docker_image"]
 localrules: copy_fastq, copy_extra
 
 rule all:
     input:
         **get_rcs_targets(get_multiqc=True, get_aggreg=True,
-                      get_renamed=True, get_fastqc=True)
+                          get_renamed=True, get_fastqc=True)
     message:
         "Finishing the Salmon RNA-Seq quantification pipeline"

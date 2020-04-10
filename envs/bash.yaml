@@ -1,0 +1,9 @@
+---
+name: bash
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+  - r
+dependencies:
+  - conda-forge:bash=5.0.011 

@@ -6,14 +6,14 @@ channels:
   - defaults
 dependencies:
   - conda-forge::python=3.8.2
-  - conda-forge::pytest=5.4.1
+  - conda-forge::pytest=5.4.2
   - conda-forge::datrie=0.8.2
-  - conda-forge::git=2.26.0
-  - conda-forge::jinja2=2.11.1
+  - conda-forge::git=2.26.2
+  - conda-forge::jinja2=2.11.2
   - conda-forge::pygraphviz=1.5
-  - conda-forge::flask=1.1.1
+  - conda-forge::flask=1.1.2
   - conda-forge::pandas=1.0.3
   - conda-forge::zlib=1.2.11
-  - conda-forge::openssl=1.1.1e
+  - conda-forge::openssl=1.1.1g
   - conda-forge::networkx=2.4
-  - bioconda::snakemake=5.14.0
+  - bioconda::snakemake=5.18.1

@@ -1,3 +1,0 @@
-Sample_id	Upstream_file	Downstream_file
-A_R1	/home/tdayris/Documents/Developments/rna-count-salmon/tests/reads/A_R1.fastq	/home/tdayris/Documents/Developments/rna-count-salmon/tests/reads/A_R2.fastq
-B_R1	/home/tdayris/Documents/Developments/rna-count-salmon/tests/reads/B_R1.fastq	/home/tdayris/Documents/Developments/rna-count-salmon/tests/reads/B_R2.fastq

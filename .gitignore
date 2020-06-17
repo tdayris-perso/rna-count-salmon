@@ -13,3 +13,5 @@ tests/salmon_index/
 */__pycache__/*
 *.pytest_cache*
 logs/*
+tests/design.tsv
+tests/config.yaml

@@ -61,35 +61,3 @@ rule salmon_quant:
         "logs/salmon/quant_{sample}.log"
     wrapper:
         f"{swv}/bio/salmon/quant"
-
-
-"""
-This rule solves the issue: Duplicate explicit target name: "quant.sf"
-within reporting
-"""
-rule salmon_quant_rename:
-    input:
-        "pseudo_mapping/{sample}/quant.sf"
-    output:
-        "pseudo_mapping/{sample}/quant.{sample}.tsv"
-    message:
-        "Symbolic link for quantification of {wildcards.sample}"
-    threads:
-        1
-    resources:
-        mem_mb = (
-            lambda wildcards, attempt: attempt * 256 + 128
-        ),
-        time_min = (
-            lambda wildcards, attempt: attempt * 3 + 2
-        )
-    log:
-        "logs/salmon/rename/{sample}.log"
-    conda:
-        "../envs/bash.yaml"
-    params:
-        pwd = os.getcwd()
-    wildcard_constraints:
-        sample = sample_constraint
-    shell:
-        "ln --verbose --symbolic {params.pwd}/{input} {params.pwd}/{output} > {log} 2>&1"

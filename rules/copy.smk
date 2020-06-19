@@ -70,7 +70,7 @@ rule salmon_quant_rename:
     input:
         "pseudo_mapping/{sample}/quant.sf"
     output:
-        "pseudo_mapping/{sample}/quant.{sample}.tsv"
+        "pseudo_mapping/aggregation/{sample}.tsv"
     message:
         "Symbolic link for quantification of {wildcards.sample}"
     threads:

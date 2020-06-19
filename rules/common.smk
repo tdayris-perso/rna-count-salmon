@@ -83,7 +83,7 @@ def get_rcs_targets(get_fastqc: bool = False,
 
     if get_renamed is True:
         targets["quant_renamed"] = expand(
-            "pseudo_mapping/{sample}/quant.{sample}.tsv",
+            "pseudo_mapping/aggregation/{sample}.tsv",
             sample=sample_id_list
         )
 

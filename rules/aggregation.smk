@@ -71,4 +71,4 @@ rule tr2gene:
     log:
         "logs/transcript_to_gene.log"
     wrapper:
-        f"{git}/bio/tx_to_gene/gtf"
+        f"{git}/bio/gtf/tr2gene"

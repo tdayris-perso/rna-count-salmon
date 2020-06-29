@@ -60,32 +60,3 @@ rule copy_extra:
         cold_storage = config.get("cold_storage", "NONE")
     wrapper:
         f"{git}/bio/cp"
-
-
-"""
-This rule solves the issue: Duplicate explicit target name: "quant.sf"
-within reporting
-"""
-rule salmon_quant_rename:
-    input:
-        "pseudo_mapping/{sample}/quant.sf"
-    output:
-        "pseudo_mapping/aggregation/{sample}.tsv"
-    message:
-        "Symbolic link for quantification of {wildcards.sample}"
-    threads:
-        1
-    resources:
-        mem_mb = (
-            lambda wildcards, attempt: attempt * 256 + 128
-        ),
-        time_min = (
-            lambda wildcards, attempt: attempt * 3 + 2
-        )
-    params:
-        cold_storage = config.get("cold_storage", ["NONE"]),
-        extra = config["params"].get("copy_extra", "")
-    log:
-        "logs/salmon/rename/{sample}.log"
-    wrapper:
-        f"{git}/bio/cp"

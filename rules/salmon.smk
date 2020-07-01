@@ -45,10 +45,10 @@ rule salmon_quant:
         "Quantifying {wildcards.sample} with Salmon"
     resources:
         mem_mb = (
-            lambda wildcards, attempt: attempt * 5120 + 2048
+            lambda wildcards, attempt: min(attempt * 5120 + 2048, 20480)
         ),
         time_min = (
-            lambda wildcards, attempt: attempt * 15 + 75
+            lambda wildcards, attempt: attempt * 60
         )
     wildcard_constraints:
         sample = sample_constraint

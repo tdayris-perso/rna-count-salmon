@@ -1,7 +1,0 @@
----
-name: Bash
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - conda-forge:bash=5.0.011

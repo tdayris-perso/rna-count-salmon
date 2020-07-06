@@ -83,6 +83,14 @@ test-conda-report.html:
 	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-conda-report.html
 
 
+test-conda-report.html:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
+	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
+	${SNAKEMAKE} -s ${SNAKE_FILE} --configfile ${PWD}/tests/config.yaml --forceall --profile .igr/profile/slurm --directory ${PWD}/tests && \
+	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-profile-report.html
+
+
 # Running snakemake on test datasets with singularity flag raised on
 test-singularity-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \

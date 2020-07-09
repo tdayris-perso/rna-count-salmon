@@ -12,4 +12,6 @@ printshellcmds: true
 jobname: "{name}.{jobid}.snakejob.sh"
 use-conda: true
 conda-prefix: /mnt/beegfs/pipelines/rna-count-salmon/conda
+use-singularity: true
+singularity-prefix: /mnt/beegfs/pipelines/rna-count-salmon/conda/singularity
 wrapper-prefix: https://raw.githubusercontent.com/tdayris/snakemake-wrappers/Unofficial

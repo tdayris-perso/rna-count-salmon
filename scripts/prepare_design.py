@@ -39,7 +39,10 @@ from pathlib import Path  # Paths related methods
 from snakemake.utils import makedirs  # Easily build directories
 from typing import Dict, Generator, List, Any  # Type hints
 
-from common_script_rna_count_salmon import *
+try:
+    from scripts.common_script_rna_count_salmon import *
+except ModuleNotFoundError:
+    from common_script_rna_count_salmon import *
 
 
 # Processing functions
@@ -175,7 +178,7 @@ def test_classify_fq():
 
 # Parsing command line arguments
 # This function won't be tested
-def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
+def parser() -> argparse.ArgumentParser:
     """
     Build a command line parser object
 
@@ -184,11 +187,6 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
 
     Return:
                 ArgumentParser      Parsed command line object
-
-    Example:
-    >>> parse_args(shlex.split("/path/to/fasta --single"))
-    Namespace(debug=False, output='design.tsv', path='/path/to/fasta',
-    quiet=False, recursive=False, single=True)
     """
     # Defining command line options
     main_parser = argparse.ArgumentParser(
@@ -246,7 +244,26 @@ def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
     )
 
     # Parsing command lines
-    return main_parser.parse_args(args)
+    return main_parser
+
+
+def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
+    """
+    Parse command line arguments
+
+    Parameters:
+        args    Any                 Command line arguments
+
+    Return:
+                ArgumentParser      Parsed command line object
+
+    Example:
+    >>> parse_args(shlex.split("/path/to/fasta --single"))
+    Namespace(debug=False, output='design.tsv', path='/path/to/fasta',
+    quiet=False, recursive=False, single=True)
+    """
+    # Parsing command lines
+    return parser().parse_args(args)
 
 
 def test_parse_args() -> None:
@@ -297,7 +314,7 @@ def main(args: argparse.ArgumentParser) -> None:
 # Running programm if not imported
 if __name__ == "__main__":
     # Parsing command line
-    args = parse_args()
+    args = parse_args(sys.argv[1:])
 
     makedirs("logs/prepare")
 
@@ -311,5 +328,4 @@ if __name__ == "__main__":
         main(args)
     except Exception as e:
         logging.exception("%s", e)
-        sys.exit(1)
-    sys.exit(0)
+        raise

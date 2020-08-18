@@ -36,7 +36,10 @@ from pathlib import Path  # Paths related methods
 from snakemake.utils import makedirs  # Easily build directories
 from typing import Dict, Any  # Typing hints
 
-from common_script_rna_count_salmon import *
+try:
+    from scripts.common_script_rna_count_salmon import *
+except ModuleNotFoundError:
+    from common_script_rna_count_salmon import *
 
 
 def parser() -> argparse.ArgumentParser:
@@ -165,7 +168,7 @@ def parser() -> argparse.ArgumentParser:
 
 
 # Argument parsing functions
-def parse_args(args: Any = sys.argv[1:]) -> argparse.ArgumentParser:
+def parse_args(args: Any) -> argparse.ArgumentParser:
     """
     This function parses command line arguments
 
@@ -383,7 +386,7 @@ def main(args: argparse.ArgumentParser) -> None:
 # Running programm if not imported
 if __name__ == "__main__":
     # Parsing command line
-    args = parse_args()
+    args = parse_args(sys.argv[1:])
     makedirs("logs/prepare")
 
     # Build logging object and behaviour
@@ -396,5 +399,4 @@ if __name__ == "__main__":
         main(args)
     except Exception as e:
         logging.exception("%s", e)
-        sys.exit(1)
-    sys.exit(0)
+        raise

@@ -33,7 +33,7 @@ jobs:
       - name: Clean
         run: make clean
       - name: Run Cli-wrapper
-        run: make test-cli-wrapper.html
+        run: make test-cli-wrapper-report.html
       - name: Clean
         run: make clean
       - name: Run workflow in Singularity

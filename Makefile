@@ -24,6 +24,10 @@ TRANSCRIPT_PATH  = tests/genome/transcriptome.fasta
 GTF_PATH         = tests/genome/annot.gtf
 READS_PATH       = tests/reads/
 
+CONFIG_CALL      = ${PYTHON} rna-count-salmon.py config
+DESIGN_CALL      = ${PYTHON} rna-count-salmon.py design
+SNAKEF_CALL      = ${PYTHON} rna-count-salmon.py snakemake
+
 # Arguments
 PYTEST_ARGS      = -vv
 ENV_NAME         = rna-count-salmon
@@ -54,7 +58,7 @@ all-unit-tests:
 config-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} && \
-	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
+	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
 .PHONY: config-tests
 
 
@@ -62,7 +66,7 @@ config-tests:
 design-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_DESIGN} && \
-	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o tests/design.tsv --debug
+	${DESIGN_CALL} ${READS_PATH} -o tests/design.tsv --debug
 .PHONY: design-tests
 
 
@@ -75,12 +79,20 @@ common-tests:
 
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
+test-cli-wrapper.html:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${DESIGN_CALL} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
+	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
+	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests" && \
+	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-cli-wrapper.html"
+
+
 test-conda-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
 	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-conda-report.html
+	${SNAKEMAKE} -s ${SNAKE_FILE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests && \
+	${SNAKEMAKE} -s ${SNAKE_FILE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-conda-report.html
 
 
 test-profile-report.html:

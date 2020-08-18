@@ -32,5 +32,9 @@ jobs:
         run: make test-conda-report.html
       - name: Clean
         run: make clean
+      - name: Run Cli-wrapper
+        run: make test-cli-wrapper.html
+      - name: Clean
+        run: make clean
       - name: Run workflow in Singularity
         run: make test-singularity-report.html

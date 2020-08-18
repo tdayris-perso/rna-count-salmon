@@ -15,3 +15,7 @@ tests/salmon_index/
 logs/*
 tests/design.tsv
 tests/config.yaml
+.eggs/
+build/
+dist/
+*.egg*

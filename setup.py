@@ -32,7 +32,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rna-count-salmon",
-    version="v1.8.2",
+    version="v1.9",
     author="Thibault Dayris",
     author_email="thibault.dayris@gustaveroussy.fr",
     description="rna-count-salmon is a pipeline written with "

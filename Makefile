@@ -79,12 +79,12 @@ common-tests:
 
 ### Continuous Integration Tests ###
 # Running snakemake on test datasets
-test-cli-wrapper.html:
+test-cli-wrapper-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${DESIGN_CALL} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
 	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
 	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests" && \
-	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-cli-wrapper.html"
+	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-cli-wrapper-report.html"
 
 
 test-conda-report.html:

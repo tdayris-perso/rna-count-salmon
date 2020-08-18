@@ -3,7 +3,24 @@
 
 
 """
-This is a simple wrapper for bash commands.
+This is the CLI launcher of the rna-count-salmon pipeline. This pipeline is
+powered by Snakemake and uses Salmon and FastQC on raw fastq files, then
+MultiQC on the results to aggregate quality reports.
+
+You will have quantified reads over both transcriptomic and genomic regions,
+alongside with complete quality reports.
+
+Please be aware that a Snakemake report is available for more details on
+both results and methods.
+
+If you have any question, please refer to the wiki at:
+https://github.com/tdayris-perso/rna-count-salmon/wiki
+
+Or open an issue at:
+https://github.com/tdayris-perso/rna-count-salmon/issues
+
+Citations:
+https://github.com/tdayris-perso/rna-count-salmon/wiki/Pipeline_Content
 """
 
 import argparse

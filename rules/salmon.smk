@@ -26,7 +26,7 @@ rule salmon_index:
     log:
         "logs/salmon/index.log"
     wrapper:
-        f"{swv}/bio/salmon/index"
+        f"{git}/bio/salmon/index"
 
 """
 This rule performs the quantification step with pseudo-mapping
@@ -60,4 +60,4 @@ rule salmon_quant:
     log:
         "logs/salmon/quant_{sample}.log"
     wrapper:
-        f"{swv}/bio/salmon/quant"
+        f"{git}/bio/salmon/quant"

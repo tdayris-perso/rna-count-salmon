@@ -29,4 +29,4 @@ rule fastqc:
     message:
         "Controling quality of {wildcards.sample} fastq file with FastQC"
     wrapper:
-        f"{swv}/bio/fastqc"
+        f"{git}/bio/fastqc"

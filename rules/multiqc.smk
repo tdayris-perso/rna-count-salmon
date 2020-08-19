@@ -27,4 +27,4 @@ rule multiqc:
     message:
         "Gathering quality reports with MultiQC"
     wrapper:
-        f"{swv}/bio/multiqc"
+        f"{git}/bio/multiqc"

@@ -32,7 +32,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rna-count-salmon",
-    version="v1.9",
+    version="v1.9.1",
     author="Thibault Dayris",
     author_email="thibault.dayris@gustaveroussy.fr",
     description="rna-count-salmon is a pipeline written with "
@@ -51,8 +51,9 @@ setuptools.setup(
     packages_data={
         "snakemake_rules": setuptools.find_packages("rules", include="*.smk|py"),
         "snakemake_scripts": setuptools.find_packages("scripts", include="*.py"),
-        "snakemake": "Snakefile"
+        "snakemake": ["Snakefile"]
     },
+    include_package_data=True,
     scripts=["rna-count-salmon.py"],
     python_requires=">=3.7",
     classifiers=[

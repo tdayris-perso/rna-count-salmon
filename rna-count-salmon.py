@@ -8,14 +8,11 @@ powered by Snakemake and uses Salmon and FastQC on raw fastq files, then
 MultiQC on the results to aggregate quality reports.
 
 You will have quantified reads over both transcriptomic and genomic regions,
-alongside with complete quality reports.
-
-Please be aware that a Snakemake report is available for more details on
-both results and methods.
+alongside with complete quality reports. Please be aware that a Snakemake report
+is available for more details on both results and methods.
 
 If you have any question, please refer to the wiki at:
 https://github.com/tdayris-perso/rna-count-salmon/wiki
-
 Or open an issue at:
 https://github.com/tdayris-perso/rna-count-salmon/issues
 
@@ -53,6 +50,7 @@ def parser() -> argparse.ArgumentParser:
     """
     main_parser = argparse.ArgumentParser(
         description=sys.modules[__name__].__doc__,
+        formatter_class=common_script_rna_count_salmon.CustomFormatter,
     )
 
     subparsers = main_parser.add_subparsers()

@@ -51,7 +51,9 @@ rule tr2gene:
     input:
         gtf = refs_pack_dict["gtf"]
     output:
-        tsv = temp("pseudo_mapping/aggregation/transcript_to_gene.tsv")
+        tx2gene_large = temp(
+            "pseudo_mapping/aggregation/transcript_to_gene.tsv"
+        )
     message:
         "Creating a transcript to gene table based on GTF"
     threads:

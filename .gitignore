@@ -1,7 +1,7 @@
 *.snakemake*
 *datasets*
-tests/pseudo_mapping/
-tests/qc/
+*pseudo_mapping/
+*qc/
 tests/raw_data/
 tests/logs/
 tests/aggregated_salmon_counts/
@@ -19,3 +19,6 @@ tests/config.yaml
 build/
 dist/
 *.egg*
+tests/snakemake
+tests/tests
+*raw_data

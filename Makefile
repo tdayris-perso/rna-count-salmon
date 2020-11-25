@@ -62,13 +62,13 @@ config.yaml:
 
 design.tsv:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${DESIGN_CALL} ${FASTQ_PATH:?} --recursive --debug
+	${DESIGN_CALL} ${FASTQ_PATH} --recursive --debug
 
 
 quantification-report.html: config.yaml design.tsv
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${SNAKEF_CALL} -s ${SNAKEFILE} --profile slurm && \
-	${SNAKEF_CALL} -s ${SNAKEFILE} --profile slurm --report quantification-report.html
+	${SNAKEF_CALL} "--profile ${PROFILE}" && \
+	${SNAKEF_CALL} "--profile ${PROFILE} --report quantification-report.html"
 
 
 ### UNIT TESTS ###
@@ -91,7 +91,7 @@ all-unit-tests:
 config-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} && \
-	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug
+	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir tests --debug -o tests/config.yaml
 .PHONY: config-tests
 
 
@@ -116,25 +116,8 @@ test-cli-wrapper-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
 	${DESIGN_CALL} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
 	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests" && \
-	${SNAKEF_CALL} "--use-conda --cores ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-cli-wrapper-report.html"
-
-
-test-conda-report.html:
-	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --forceall --printshellcmds --reason --directory ${PWD}/tests && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-conda-report.html
-
-
-test-profile-report.html:
-	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTHON} ${TEST_DESIGN} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
-	${PYTHON} ${TEST_CONFIG} ${TRANSCRIPT_PATH} ${GTF_PATH} --salmon-index-extra ${SAINDEX_ARGS} --salmon-quant-extra ${SAQUANT_ARGS} --aggregate --libType ISF --workdir ${PWD}/tests --design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --configfile ${PWD}/tests/config.yaml --forceall --profile .igr/profile/slurm --directory ${PWD}/tests && \
-	${SNAKEMAKE} -s ${SNAKE_FILE} --use-conda -j ${SNAKE_THREADS} --configfile ${PWD}/tests/config.yaml --directory ${PWD}/tests --report test-profile-report.html
-
+	${SNAKEF_CALL} "--profile ${PROFILE} --configfile tests/config.yaml" && \
+	${SNAKEF_CALL} "--profile ${PROFILE} --configfile tests/config.yaml --report test-cli-wrapper-report.html"
 
 # Running snakemake on test datasets with singularity flag raised on
 test-singularity-report.html:

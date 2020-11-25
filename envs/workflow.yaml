@@ -28,5 +28,5 @@ variables:
   SNAKEFILE: "Snakefile"
   PREPARE_CONFIG: scripts/prepare_config.py"
   PREPARE_DESIGN: "scripts/prepare_design.py"
-  FASTA: "tests/genome/transcriptome.fa"
+  FASTA: "tests/genome/transcriptome.fasta"
   GTF: "tests/genome/annot.gtf"

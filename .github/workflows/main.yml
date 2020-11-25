@@ -27,6 +27,6 @@ jobs:
       - name: Setup workflow environment
         run: make conda-tests
       - name: Scripts unit-testing
-        run: conda activate rna-count-salmon && make all-unit-tests
+        run: source "$$(conda info --base)/etc/profile.d/conda.sh" && conda activate && conda activate rna-count-salmon && make all-unit-tests
       - name: Run Cli-wrapper
-        run: conda activate rna-count-salmon && make test-cli-wrapper-report.html
+        run: source "$$(conda info --base)/etc/profile.d/conda.sh" && conda activate && conda activate rna-count-salmon && make test-cli-wrapper-report.html

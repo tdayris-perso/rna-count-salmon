@@ -20,6 +20,8 @@ TEST_DESIGN      = scripts/prepare_design.py
 TEST_COMMON      = scripts/common_script_rna_count_salmon.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
+ENV_FLAMINGO     = envs/workflow_flamingo.yaml
+ENV_LOCAL        = envs/workflow_local.yaml
 TRANSCRIPT_PATH  = tests/genome/transcriptome.fasta
 GTF_PATH         = tests/genome/annot.gtf
 READS_PATH       = tests/reads/
@@ -36,8 +38,40 @@ SAINDEX_ARGS     = ' --kmerLen 5 '
 SAQUANT_ARGS     = ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples 0 --numAuxModelSamples 0 '
 
 # Recipes
-default: all-unit-tests
+default: quantification-report.html
 
+
+conda-install-flamingo:
+	${CONDA_ACTIVATE} base && \
+	${CONDA} env create --file ${ENV_FLAMINGO} --force && \
+	${CONDA} activate ${ENV_NAME}
+.PHONY: conda-tests
+
+
+conda-install-local:
+	${CONDA_ACTIVATE} base && \
+	${CONDA} env create --file ${ENV_LOCAL} --force && \
+	${CONDA} activate ${ENV_NAME}
+.PHONY: conda-tests
+
+
+config.yaml:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${CONFIG_CALL} ${FASTA} ${GTF} --debug
+
+
+design.tsv:
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${DESIGN_CALL} ${FASTQ_PATH:?} --recursive --debug
+
+
+quantification-report.html: config.yaml design.tsv
+	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	${SNAKEF_CALL} -s ${SNAKEFILE} --profile slurm && \
+	${SNAKEF_CALL} -s ${SNAKEFILE} --profile slurm --report quantification-report.html
+
+
+### UNIT TESTS ###
 # Environment building through conda
 conda-tests:
 	${CONDA_ACTIVATE} base && \
@@ -45,13 +79,7 @@ conda-tests:
 	${CONDA} activate ${ENV_NAME}
 .PHONY: conda-tests
 
-install:
-	${CONDA_ACTIVATE} base && \
-	${CONDA} env create --file ${ENV_YAML}
-.PHONY: install
 
-
-### UNIT TESTS ###
 # Running all unit-tests (one for each python scripts)
 all-unit-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \

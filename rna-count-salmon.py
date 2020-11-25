@@ -73,15 +73,44 @@ def parser() -> argparse.ArgumentParser:
         add_help=True
     )
     snake.add_argument(
-        "ARGS",
+        "--snakemake-args",
         help="Snakemake arguments. If you use this wrapper instead "
              "of real snakemake call, then please put all your"
-             " arguments in simple quotes.",
+             " arguments in simple quotes. (default: %(default)s)",
         type=str,
-        nargs="+",
-        default="--help"
+        default=""
     )
-    snake.set_defaults(func=snakefile)
+    snake.add_argument(
+        "--no-profile",
+        help="Do not activate snakemake profile. This means you have to "
+             "define several environment variables. See documentation for "
+             "more information.",
+        action="store_true",
+        default=False
+    )
+    snake.set_defaults(func=snakemake_run)
+
+    report_parser = subparsers.add_parser(
+        "report",
+        add_help=True
+    )
+    report_parser.add_argument(
+        "--snakemake-args",
+        help="Snakemake arguments. If you use this wrapper instead "
+             "of real snakemake call, then please put all your"
+             " arguments in simple quotes. (default: %(default)s)",
+        type=str,
+        default=""
+    )
+    report_parser.add_argument(
+        "--no-profile",
+        help="Do not activate snakemake profile. This means you have to "
+             "define several environment variables. See documentation for "
+             "more information.",
+        action="store_true",
+        default=False
+    )
+    report_parser.set_defaults(func=report)
     return main_parser
 
 
@@ -108,14 +137,42 @@ def parse_args(args: Any) -> argparse.ArgumentParser:
     return parser().parse_args(args)
 
 
-def snakefile(args):
+def snakemake_command(opt: str = "",
+                      use_profile: bool = True,
+                      make_report: bool = False) -> str:
+    """
+    Build snakemake command line
+    """
+    return " ".join([
+        "snakemake",
+        f" -s {os.getenv('SNAKEFILE')}",
+        f"--profile {os.getenv('PROFILE')}" if use_profile is True else "",
+        "--report Quantification_Report.html" if make_report is True else "",
+        opt
+    ])
+
+def snakemake_run(cmd_line_args) -> None:
     """
     Call snakemake itself
     """
-    snakefile_path = Path(os.path.realpath(__file__))
-    snakefile_path = snakefile_path.parent / "Snakefile"
+    command = snakemake_command(
+        opt=cmd_line_args.snakemake_args,
+        use_profile=not cmd_line_args.no_profile,
+        make_report=False
+    )
 
-    command = f"snakemake -s {snakefile_path} {' '.join(args.ARGS)}"
+    shell(command)
+
+
+def report(cmd_line_args) -> None:
+    """
+    Call snakemake itself
+    """
+    command = snakemake_command(
+        opt=cmd_line_args.snakemake_args,
+        use_profile=not cmd_line_args.no_profile,
+        make_report=True
+    )
 
     shell(command)
 

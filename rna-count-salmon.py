@@ -180,6 +180,7 @@ def snakemake_run(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
+    print(command)
     shell(command)
 
 
@@ -194,6 +195,7 @@ def report(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
+    print(command)
     shell(command)
 
 

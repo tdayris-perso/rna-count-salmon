@@ -26,5 +26,5 @@ variables:
   SNAKEMAKE_OUTPUT_CACHE: "/mnt/beegfs/pipelines/rna-count-salmon/cache"
   PROFILE: "/home/t_dayris@intra.igr.fr/.config/snakemake/slurm"
   SNAKEFILE: "${PIPELINE_PREFIX}/Snakefile"
-  PREPARE_CONFIG: "${PIPELINE_PREFIX}/scripts/prepare_config.py"
-  PREPARE_DESIGN: "${PIPELINE_PREFIX}/scripts/prepare_design.py"
+  PREPARE_CONFIG: "/mnt/beegfs/userdata/t_dayris/rna-count-salmon/scripts/prepare_config.py"
+  PREPARE_DESIGN: "/mnt/beegfs/userdata/t_dayris/rna-count-salmon/scripts/prepare_design.py"

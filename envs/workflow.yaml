@@ -23,7 +23,7 @@ dependencies:
   - conda-forge::singularity=3.5.3
 variables:
   PIPELINE_PREFIX: "."
-  SNAKEMAKE_OUTPUT_CACHE: "tests/snakemake/cache"
+  SNAKEMAKE_OUTPUT_CACHE: "snakemake/cache"
   PROFILE: ".igr/profile/local"
   SNAKEFILE: "Snakefile"
   PREPARE_CONFIG: scripts/prepare_config.py"

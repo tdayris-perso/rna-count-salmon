@@ -21,6 +21,8 @@ rule salmon_index:
         )
     threads:
         min(config["threads"], 12)
+    cache:
+        True
     params:
         extra = config["params"].get("salmon_index_extra", "")
     log:

@@ -88,6 +88,14 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False
     )
+    snake.add_argument(
+        "--no-cache",
+        help="Do not use the shared cache that allows user not to re-run "
+             "indexation steps. Not using cache will slow down your analysis "
+             "and use disk space for duplicated data.",
+        action="store_true",
+        default=False
+    )
     snake.set_defaults(func=snakemake_run)
 
     report_parser = subparsers.add_parser(
@@ -107,6 +115,14 @@ def parser() -> argparse.ArgumentParser:
         help="Do not activate snakemake profile. This means you have to "
              "define several environment variables. See documentation for "
              "more information.",
+        action="store_true",
+        default=False
+    )
+    report_parser.add_argument(
+        "--no-cache",
+        help="Do not use the shared cache that allows user not to re-run "
+             "indexation steps. Not using cache will slow down your analysis "
+             "and use disk space for duplicated data.",
         action="store_true",
         default=False
     )
@@ -139,7 +155,8 @@ def parse_args(args: Any) -> argparse.ArgumentParser:
 
 def snakemake_command(opt: str = "",
                       use_profile: bool = True,
-                      make_report: bool = False) -> str:
+                      make_report: bool = False,
+                      use_cache: bool = True) -> str:
     """
     Build snakemake command line
     """
@@ -148,6 +165,7 @@ def snakemake_command(opt: str = "",
         f" -s {os.getenv('SNAKEFILE')}",
         f"--profile {os.getenv('PROFILE')}" if use_profile is True else "",
         "--report Quantification_Report.html" if make_report is True else "",
+        "--cache salmon_index tr2gene" if use_cache is True else "",
         opt
     ])
 
@@ -158,7 +176,8 @@ def snakemake_run(cmd_line_args) -> None:
     command = snakemake_command(
         opt=cmd_line_args.snakemake_args,
         use_profile=not cmd_line_args.no_profile,
-        make_report=False
+        make_report=False,
+        use_cache=not cmd_line_args.no_cache
     )
 
     shell(command)
@@ -171,7 +190,8 @@ def report(cmd_line_args) -> None:
     command = snakemake_command(
         opt=cmd_line_args.snakemake_args,
         use_profile=not cmd_line_args.no_profile,
-        make_report=True
+        make_report=True,
+        use_cache=not cmd_line_args.no_cache
     )
 
     shell(command)

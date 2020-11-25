@@ -67,6 +67,8 @@ rule tr2gene:
         time_min = (
             lambda wildcards, attempt: min(attempt * 10, 60)
         )
+    cache:
+        True
     params:
         header = True,
         positions = True

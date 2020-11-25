@@ -117,8 +117,8 @@ test-cli-wrapper-report.html:
 	--salmon-quant-extra ${SAQUANT_ARGS} \
 	--aggregate --libType ISF --workdir ${PWD}/tests \
 	--design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEF_CALL} --no-cache --snakemake-args "--configfile tests/config.yaml --directory tests" && \
-	${REPORT_CALL} --no-cache --snakemake-args "--configfile tests/config.yaml --directory tests"
+	${SNAKEF_CALL} --no-cache --snakemake-args "--configfile tests/config.yaml --directory tests --use-conda -j 1" && \
+	${REPORT_CALL} --no-cache --snakemake-args "--configfile tests/config.yaml --directory tests --use-conda -j 1"
 
 
 # Cleaning Snakemake outputs

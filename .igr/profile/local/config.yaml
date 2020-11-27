@@ -8,7 +8,7 @@ reason: true
 printshellcmds: true
 jobname: "{name}.{jobid}.snakejob.sh"
 use-conda: true
-conda-prefix: tests/snakemake/conda
+conda-prefix: snakemake/conda
 use-singularity: true
-singularity-prefix: tests/snakemake/singularity
+singularity-prefix: snakemake/singularity
 wrapper-prefix: https://raw.githubusercontent.com/tdayris/snakemake-wrappers/Unofficial

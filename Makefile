@@ -111,14 +111,22 @@ common-tests:
 # Running snakemake on test datasets
 test-cli-wrapper-report.html:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
+	declare -x SNAKEMAKE_OUTPUT_CACHE="${PWD}/tests/snakemake/cache" && \
+	declare -x SNAKEFILE="${PWD}/Snakefile" && \
+	declare -x PROFILE="${PWD}/.igr/profile/local" && \
+	declare -x PREPARE_CONFIG="${PWD}/scripts/prepare_config.py" && \
+	declare -x PREPARE_DESIGN="${PWD}/scripts/prepare_design.py" && \
+	declare -x FASTA="${PWD}/tests/genome/transcriptome.fasta" && \
+	declare -x GTF="${PWD}/tests/genome/annot.gtf" && \
+	export SNAKEMAKE_OUTPUT_CACHE SNAKEFILE PROFILE PREPARE_CONFIG PREPARE_DESIGN FASTA GTF && \
 	${DESIGN_CALL} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
 	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} \
 	--salmon-index-extra ${SAINDEX_ARGS} \
 	--salmon-quant-extra ${SAQUANT_ARGS} \
 	--aggregate --libType ISF --workdir ${PWD}/tests \
 	--design ${PWD}/tests/design.tsv --threads ${SNAKE_THREADS} --debug && \
-	${SNAKEF_CALL} --no-cache --no-profile --snakemake-args "--configfile tests/config.yaml --directory tests --use-conda -j 1" && \
-	${REPORT_CALL} --no-cache --no-profile --snakemake-args "--configfile tests/config.yaml --directory tests --use-conda -j 1"
+	${SNAKEF_CALL} --snakemake-args "--configfile tests/config.yaml" && \
+	${REPORT_CALL} --snakemake-args "--configfile tests/config.yaml"
 
 
 # Cleaning Snakemake outputs

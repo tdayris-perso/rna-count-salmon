@@ -22,9 +22,9 @@ dependencies:
   - conda-forge::black=20.8b1
   - conda-forge::singularity=3.5.3
 variables:
-  PIPELINE_PREFIX: "/mnt/beegfs/userdata/t_dayris/rna-count-salmon"
-  SNAKEMAKE_OUTPUT_CACHE: "/mnt/beegfs/pipelines/rna-count-salmon/cache"
-  PROFILE: "/home/t_dayris@intra.igr.fr/.config/snakemake/slurm"
-  SNAKEFILE: "${PIPELINE_PREFIX}/Snakefile"
-  PREPARE_CONFIG: "/mnt/beegfs/userdata/t_dayris/rna-count-salmon/scripts/prepare_config.py"
-  PREPARE_DESIGN: "/mnt/beegfs/userdata/t_dayris/rna-count-salmon/scripts/prepare_design.py"
+  PIPELINE_PREFIX: "/home/tdayris/Documents/Developments/rna-count-salmon"
+  SNAKEMAKE_OUTPUT_CACHE: "/home/tdayris/snakemake/cache"
+  PROFILE: "/home/tdayris/.config/snakemake/slurm"
+  SNAKEFILE: "/home/tdayris/Documents/Developments/rna-count-salmon/Snakefile"
+  PREPARE_CONFIG: "/home/tdayris/Documents/Developments/rna-count-salmon/scripts/prepare_config.py"
+  PREPARE_DESIGN: "/home/tdayris/Documents/Developments/rna-count-salmon/scripts/prepare_design.py"

@@ -22,11 +22,11 @@ dependencies:
   - conda-forge::black=20.8b1
   - conda-forge::singularity=3.5.3
 variables:
-  PIPELINE_PREFIX: "/mnt/beegfs/pipelines/rna-count-salmon/"
+  PIPELINE_PREFIX: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon"
   SNAKEMAKE_OUTPUT_CACHE: "/mnt/beegfs/pipelines/rna-count-salmon/cache"
-  PROFILE: "/mnt/beegfs/pipelines/rna-count-salmon/.igr/profile/slurm"
-  SNAKEFILE: "/mnt/beegfs/pipelines/rna-count-salmon/Snakefile"
-  PREPARE_CONFIG: "/mnt/beegfs/pipelines/rna-count-salmon/scripts/prepare_config.py"
-  PREPARE_DESIGN: "/mnt/beegfs/pipelines/rna-count-salmon/scripts/prepare_design.py"
+  PROFILE: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/.igr/profile/slurm"
+  SNAKEFILE: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/Snakefile"
+  PREPARE_CONFIG: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/scripts/prepare_config.py"
+  PREPARE_DESIGN: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/scripts/prepare_design.py"
   FASTA: "/mnt/beegfs/database/bioinfo/Index_DB/Fasta/Gencode/GRCH38/release_34/RNA/gencode.v34.transcripts.fa"
   GTF: "/mnt/beegfs/database/bioinfo/Index_DB/GTF/Gencode/GRCH38/release_34/gencode.v34.annotation.gtf"

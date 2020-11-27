@@ -223,7 +223,7 @@ def igr_run(cmd_line_args) -> None:
     """
     Call this pipeline whole pipeline with default arguments
     """
-    config_cmd = " ".join([
+    config_cmd = [
         "python3",
         os.getenv('RNA_COUNT_LAUNCHER'),
         "config",
@@ -233,7 +233,7 @@ def igr_run(cmd_line_args) -> None:
         "--aggregate",
         "--debug",
         "--cold-storage /mnt/isilon /mnt/archivage",
-    ])
+    ]
     run_cmd(*config_cmd)
 
     design_cmd = [

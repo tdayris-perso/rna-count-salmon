@@ -132,10 +132,11 @@ def parser() -> argparse.ArgumentParser:
         add_help=True
     )
     igr.add_argument(
-        "fastqdir",
-        help="Path to fastq files directory",
+        "--fastqdir",
+        help="Path to fastq files directory (default: %(default)s)",
         type=str,
-        metavar="FQ-DIR"
+        metavar="FQ-DIR",
+        default=os.getcwd()
     )
     igr.set_defaults(func=igr_run)
 

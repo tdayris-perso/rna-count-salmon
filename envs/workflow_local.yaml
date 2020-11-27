@@ -28,3 +28,4 @@ variables:
   SNAKEFILE: "/home/tdayris/Documents/Developments/rna-count-salmon/Snakefile"
   PREPARE_CONFIG: "/home/tdayris/Documents/Developments/rna-count-salmon/scripts/prepare_config.py"
   PREPARE_DESIGN: "/home/tdayris/Documents/Developments/rna-count-salmon/scripts/prepare_design.py"
+  RNA_COUNT_LAUNCHER: "/home/tdayris/Documents/Developments/rna-count-salmon/rna-count-salmon.py"

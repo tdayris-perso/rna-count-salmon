@@ -202,7 +202,7 @@ def snakemake_run(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
-    run_cmd(command)
+    run_cmd(*command)
 
 
 def report(cmd_line_args) -> None:
@@ -216,7 +216,7 @@ def report(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
-    run_cmd(command)
+    run_cmd(*command)
 
 
 def igr_run(cmd_line_args) -> None:
@@ -234,7 +234,7 @@ def igr_run(cmd_line_args) -> None:
         "--debug",
         "--cold-storage /mnt/isilon /mnt/archivage",
     ])
-    run_cmd(config_cmd)
+    run_cmd(*config_cmd)
 
     design_cmd = [
         "python3",
@@ -244,21 +244,21 @@ def igr_run(cmd_line_args) -> None:
         "--recursive",
         "--debug"
     ]
-    run_cmd(design_cmd)
+    run_cmd(*design_cmd)
 
     snakemake_cmd = [
         "python3",
         os.getenv("RNA_COUNT_LAUNCHER"),
         "snakemake"
     ]
-    run_cmd(snakemake_cmd)
+    run_cmd(*snakemake_cmd)
 
     report_cmd = [
         "python3",
         os.getenv("RNA_COUNT_LAUNCHER"),
         "report"
     ]
-    run_cmd(report_cmd)
+    run_cmd(*report_cmd)
 
 
 

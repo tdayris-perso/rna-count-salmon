@@ -219,7 +219,7 @@ def report(cmd_line_args) -> None:
     run_cmd(command)
 
 
-def igr_run() -> None:
+def igr_run(cmd_line_args) -> None:
     """
     Call this pipeline whole pipeline with default arguments
     """
@@ -240,6 +240,7 @@ def igr_run() -> None:
         "python3",
         os.getenv('RNA_COUNT_LAUNCHER'),
         "design",
+        cmd_line_args.fastqdir,
         "--recursive",
         "--debug"
     ]
@@ -248,13 +249,15 @@ def igr_run() -> None:
     snakemake_cmd = [
         "python3",
         os.getenv("RNA_COUNT_LAUNCHER"),
-        "snakemake",
-        "--snakemake-args",
-        "'--configfile config.yaml'"
+        "snakemake"
     ]
     run_cmd(snakemake_cmd)
 
-    report_cmd = snakemake_cmd.append("--report", "Quantification_Report.html")
+    report_cmd = [
+        "python3",
+        os.getenv("RNA_COUNT_LAUNCHER"),
+        "report"
+    ]
     run_cmd(report_cmd)
 
 

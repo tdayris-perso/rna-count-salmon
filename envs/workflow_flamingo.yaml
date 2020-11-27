@@ -28,5 +28,6 @@ variables:
   SNAKEFILE: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/Snakefile"
   PREPARE_CONFIG: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/scripts/prepare_config.py"
   PREPARE_DESIGN: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/scripts/prepare_design.py"
+  RNA_COUNT_LAUNCHER: "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/rna-count-salmon.py"
   FASTA: "/mnt/beegfs/database/bioinfo/Index_DB/Fasta/Gencode/GRCH38/release_34/RNA/gencode.v34.transcripts.fa"
   GTF: "/mnt/beegfs/database/bioinfo/Index_DB/GTF/Gencode/GRCH38/release_34/gencode.v34.annotation.gtf"

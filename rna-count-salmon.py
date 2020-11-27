@@ -126,6 +126,19 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False
     )
+
+    igr = subparsers.add_parser(
+        "flamingo",
+        add_help=True
+    )
+    igr.add_argument(
+        "fastqdir",
+        help="Path to fastq files directory",
+        type=str,
+        metavar="FQ-DIR"
+    )
+    igr.set_defaults(func=igr_run)
+
     report_parser.set_defaults(func=report)
     return main_parser
 
@@ -160,14 +173,23 @@ def snakemake_command(opt: str = "",
     """
     Build snakemake command line
     """
-    return " ".join([
+    return [
         "snakemake",
-        f" -s {os.getenv('SNAKEFILE')}",
+        f"-s {os.getenv('SNAKEFILE')}",
         f"--profile {os.getenv('PROFILE')}" if use_profile is True else "",
         "--report Quantification_Report.html" if make_report is True else "",
         "--cache salmon_index tr2gene" if use_cache is True else "",
         opt
-    ])
+    ]
+
+
+def run_cmd(*cmd_line) -> None:
+    """
+    Run a provided command line
+    """
+    cmd_line = " ".join(cmd_line)
+    print(cmd_line)
+    shell(cmd_line)
 
 def snakemake_run(cmd_line_args) -> None:
     """
@@ -180,8 +202,7 @@ def snakemake_run(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
-    print(command)
-    shell(command)
+    run_cmd(command)
 
 
 def report(cmd_line_args) -> None:
@@ -195,8 +216,47 @@ def report(cmd_line_args) -> None:
         use_cache=not cmd_line_args.no_cache
     )
 
-    print(command)
-    shell(command)
+    run_cmd(command)
+
+
+def igr_run() -> None:
+    """
+    Call this pipeline whole pipeline with default arguments
+    """
+    config_cmd = " ".join([
+        "python3",
+        os.getenv('RNA_COUNT_LAUNCHER'),
+        "config",
+        os.getenv('FASTA'),
+        os.getenv('GTF'),
+        "--threads 20",
+        "--aggregate",
+        "--debug",
+        "--cold-storage /mnt/isilon /mnt/archivage",
+    ])
+    run_cmd(config_cmd)
+
+    design_cmd = [
+        "python3",
+        os.getenv('RNA_COUNT_LAUNCHER'),
+        "design",
+        "--recursive",
+        "--debug"
+    ]
+    run_cmd(design_cmd)
+
+    snakemake_cmd = [
+        "python3",
+        os.getenv("RNA_COUNT_LAUNCHER"),
+        "snakemake",
+        "--snakemake-args",
+        "'--configfile config.yaml'"
+    ]
+    run_cmd(snakemake_cmd)
+
+    report_cmd = snakemake_cmd.append("--report", "Quantification_Report.html")
+    run_cmd(report_cmd)
+
 
 
 if __name__ == '__main__':

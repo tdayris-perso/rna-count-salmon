@@ -11,8 +11,6 @@ function message() {
   # Classic switch based on status
   if [ ${status} = INFO ]; then
     echo -e "\033[1;36m@INFO:\033[0m ${message}"
-  elif [ ${status} = CMD ]; then
-    echo -e "\033[1;32m@CMD:\033[0m ${message}"
   elif [ ${status} = ERROR ]; then
     echo -e "\033[41m@ERROR:\033[0m ${message}"
   elif [ ${status} = DOC ]; then
@@ -55,7 +53,6 @@ function help_message() {
   message DOC "In fact, I always start my speech with :"
   message DOC "'\033[0;33m@DOC:\033[0m' when i't about my functions,"
   message DOC "'\033[1;36m@INFO:\033[0m' when it's about my intentions, "
-  message DOC "'\033[1;32m@CMD:\033[0m' I give you all the command lines I use,"
   message DOC "'\033[41m@ERROR:\033[0m', I tell you when things go wrong."
   echo ""
   message DOC "I understand very fiew things, and here they are:"
@@ -66,6 +63,8 @@ function help_message() {
   message DOC "bash /path/to/run.sh"
   exit 0
 }
+
+[[ $# -gt 0 ]] && help_message
 
 # Loading conda
 message INFO "Sourcing conda for users who did not source it before."

@@ -224,41 +224,37 @@ def igr_run(cmd_line_args) -> None:
     """
     Call this pipeline whole pipeline with default arguments
     """
-    config_cmd = [
-        "python3",
-        os.getenv('RNA_COUNT_LAUNCHER'),
-        "config",
-        os.getenv('FASTA'),
-        os.getenv('GTF'),
-        "--threads 20",
-        "--aggregate",
-        "--debug",
-        "--cold-storage /mnt/isilon /mnt/archivage",
-    ]
-    run_cmd(*config_cmd)
+    config_path = "config.yaml"
+    if not os.path.exists(config_path):
+        config_cmd = [
+            "python3",
+            os.getenv('RNA_COUNT_LAUNCHER'),
+            "config",
+            os.getenv('FASTA'),
+            os.getenv('GTF'),
+            "--threads 20",
+            "--aggregate",
+            "--debug",
+            "--cold-storage /mnt/isilon /mnt/archivage",
+        ]
+        run_cmd(*config_cmd)
 
-    design_cmd = [
-        "python3",
-        os.getenv('RNA_COUNT_LAUNCHER'),
-        "design",
-        cmd_line_args.fastqdir,
-        "--recursive",
-        "--debug"
-    ]
-    run_cmd(*design_cmd)
+    design_path = "design.tsv"
+    if not os.path.exists(design_path):
+        design_cmd = [
+            "python3",
+            os.getenv('RNA_COUNT_LAUNCHER'),
+            "design",
+            cmd_line_args.fastqdir,
+            "--recursive",
+            "--debug"
+        ]
+        run_cmd(*design_cmd)
 
-    snakemake_cmd = [
-        "python3",
-        os.getenv("RNA_COUNT_LAUNCHER"),
-        "snakemake"
-    ]
+    snakemake_cmd = ["python3", os.getenv("RNA_COUNT_LAUNCHER"), "snakemake"]
     run_cmd(*snakemake_cmd)
 
-    report_cmd = [
-        "python3",
-        os.getenv("RNA_COUNT_LAUNCHER"),
-        "report"
-    ]
+    report_cmd = ["python3", os.getenv("RNA_COUNT_LAUNCHER"), "report"]
     run_cmd(*report_cmd)
 
 

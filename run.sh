@@ -75,9 +75,9 @@ message INFO "Installing environment if and only if this action is needed."
 $(conda info --envs | grep "rna-count-salmon" > "/dev/null") && message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
 
 # Check on environment variables: if env are missing
-echo INFO "Loading 'rna-count-salmon' environment"
+message INFO "Loading 'rna-count-salmon' environment"
 conda activate rna-count-salmon || error_handling "${LINENO}" 2 "Could not activate the environment 'rna-count-salmon'."
 
 # then installation process did not work properly
-echo INFO "Running pipeline if and only if it is possible"
+message INFO "Running pipeline if and only if it is possible"
 $(export -p | grep "RNA_COUNT_LAUNCHER" --quiet) && python3 ${RNA_COUNT_LAUNCHER} flamingo || error_handling ${LINENO} 3 "Could not locate rna-count-salmon launcher at: ${RNA_COUNT_LAUNCHER}"

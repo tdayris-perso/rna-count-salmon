@@ -60,12 +60,10 @@ rule tr2gene:
         1
     resources:
         mem_mb = (
-            lambda wildcards, attempt: min(
-                attempt * len(sample_id_list) * 250, 10240
-            )
+            lambda wildcards, attempt: min(attempt * 2048, 4096)
         ),
         time_min = (
-            lambda wildcards, attempt: min(attempt * 10, 60)
+            lambda wildcards, attempt: min(attempt * 10, 20)
         )
     cache:
         True

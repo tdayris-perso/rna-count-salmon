@@ -72,7 +72,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh" && conda activate || exit e
 
 # Install conda environment if not installed before
 message INFO "Installing environment if and only if this action is needed."
-$(conda info --envs | grep "rna-count-salmon" --quiet) && message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
+$(conda info --envs | grep "rna-count-salmon" > "/dev/null") && message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
 
 # Check on environment variables: if env are missing
 echo INFO "Loading 'rna-count-salmon' environment"

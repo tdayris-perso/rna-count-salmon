@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eui
+set -euic
 
 # This function only changes echo headers
 # for user's sake.

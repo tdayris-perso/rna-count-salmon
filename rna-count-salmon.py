@@ -21,6 +21,7 @@ https://github.com/tdayris-perso/rna-count-salmon/wiki/Pipeline_Content
 """
 
 import argparse
+import pytest
 import os
 import logging
 import sys
@@ -28,7 +29,6 @@ import sys
 from pathlib import Path
 from snakemake.utils import makedirs
 from snakemake.shell import shell
-import snakemake
 from typing import Any
 
 try:
@@ -184,13 +184,56 @@ def snakemake_command(opt: str = "",
     ]
 
 
+@pytest.mark.parametrize(
+    "opt, prof, rep, cache, expected", [
+        ("--configfile config.yaml", True, True, True, [
+            "snakemake",
+            f"-s {os.getenv('SNAKEFILE')}",
+            f"--profile {os.getenv('PROFILE')}",
+            "--report Quantification_Report.html",
+            "--cache salmon_index tr2gene",
+            "--configfile config.yaml"
+        ]),
+        ("", False, False, False, [
+            "snakemake", f"-s {os.getenv('SNAKEFILE')}", "", "", "", ""
+        ]),
+    ]
+)
+def test_snakemake_command(opt, prof, rep, cache, expected) -> None:
+    """
+    This function tests the above snakemake_command
+    """
+    assert snakemake_command(opt, prof, rep, cache) == expected
+
+
+def check_env() -> bool:
+    """
+    Verify environment variables required for this pipeline
+    """
+    expected = [
+        os.getenv('SNAKEFILE'),
+        os.getenv('PROFILE'),
+        os.getenv("RNA_COUNT_LAUNCHER"),
+        os.getenv("FASTA"),
+        os.getenv("GTF")
+    ]
+    test_if_none = all(var is not None for var in expected)
+    test_if_exists = all(os.path.exists(path) for path in expected)
+
+    return test_if_none and test_if_exists
+
+
+
 def run_cmd(*cmd_line) -> None:
     """
     Run a provided command line
     """
     cmd_line = " ".join(cmd_line)
-    print(cmd_line)
-    shell(cmd_line)
+    if check_env():
+        print(cmd_line)
+        shell(cmd_line)
+    else:
+        print("Environment was not suitable for this pipeline to run.")
 
 def snakemake_run(cmd_line_args) -> None:
     """

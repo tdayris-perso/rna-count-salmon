@@ -18,6 +18,7 @@ CONDA_ACTIVATE   = source "$$(conda info --base)/etc/profile.d/conda.sh" ; conda
 TEST_CONFIG      = scripts/prepare_config.py
 TEST_DESIGN      = scripts/prepare_design.py
 TEST_COMMON      = scripts/common_script_rna_count_salmon.py
+TEST_CALLER      = rna-count-salmon.py
 SNAKE_FILE       = Snakefile
 ENV_YAML         = envs/workflow.yaml
 ENV_FLAMINGO     = envs/workflow_flamingo.yaml
@@ -80,7 +81,7 @@ conda-tests:
 # Running all unit-tests (one for each python scripts)
 all-unit-tests:
 	${CONDA_ACTIVATE} ${ENV_NAME} && \
-	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} ${TEST_DESIGN} ${TEST_COMMON}
+	${PYTEST} ${PYTEST_ARGS} ${TEST_CONFIG} ${TEST_DESIGN} ${TEST_COMMON} ${TEST_CALLER}
 .PHONY: all-unit-tests
 
 

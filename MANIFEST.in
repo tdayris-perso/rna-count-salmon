@@ -1,0 +1,4 @@
+include Snakefile
+recursive-include rule *.py *.smk
+recursive-include schemas *.yaml
+recursive-include report *.rst

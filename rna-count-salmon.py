@@ -218,7 +218,11 @@ def check_env() -> bool:
         os.getenv("GTF")
     ]
     test_if_none = all(var is not None for var in expected)
-    test_if_exists = all(os.path.exists(path) for path in expected)
+
+    try:
+        test_if_exists = all(os.path.exists(path) for path in expected)
+    except TypeError:
+        print(f"Environment does not fit expectations: {expected}")
 
     return test_if_none and test_if_exists
 

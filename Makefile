@@ -119,7 +119,8 @@ test-cli-wrapper-report.html:
 	declare -x PREPARE_DESIGN="${PWD}/scripts/prepare_design.py" && \
 	declare -x FASTA="${PWD}/tests/genome/transcriptome.fasta" && \
 	declare -x GTF="${PWD}/tests/genome/annot.gtf" && \
-	export SNAKEMAKE_OUTPUT_CACHE SNAKEFILE PROFILE PREPARE_CONFIG PREPARE_DESIGN FASTA GTF && \
+	declare -x RNA_COUNT_LAUNCHER="${PWD}/rna-count-salmon.py" && \
+	export SNAKEMAKE_OUTPUT_CACHE SNAKEFILE PROFILE PREPARE_CONFIG PREPARE_DESIGN FASTA GTF RNA_COUNT_LAUNCHER && \
 	${DESIGN_CALL} ${READS_PATH} -o ${PWD}/tests/design.tsv --debug && \
 	${CONFIG_CALL} ${TRANSCRIPT_PATH} ${GTF_PATH} \
 	--salmon-index-extra ${SAINDEX_ARGS} \

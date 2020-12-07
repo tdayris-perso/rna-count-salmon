@@ -136,7 +136,8 @@ def parser() -> argparse.ArgumentParser:
         help="Extra parameters for salmon quantification step "
         "(default: %(default)s)",
         type=str,
-        default="--numBootstraps 100 --validateMappings --gcBias --seqBias",
+        default="--numBootstraps 100 --validateMappings --gcBias "
+                "--seqBias --posBias",
     )
 
     main_parser.add_argument(
@@ -183,8 +184,8 @@ def parse_args(args: Any) -> argparse.ArgumentParser:
     Namespace(aggregate=False, cold_storage=[' '], debug=False,
     design='design.tsv', fasta='/path/to/fasta', gtf=None, libType='A',
     no_fastqc=False, no_multiqc=False, quiet=False, salmon_index_extra='
-    --keepDuplicates --gencode --perfectHash', salmon_quant_extra='
-    --numBootstraps 100 --validateMappings --gcBias --seqBias',
+    --keepDuplicates --gencode', salmon_quant_extra='
+    --numBootstraps 100 --validateMappings --gcBias --seqBias --posBias',
     singularity='docker://continuumio/miniconda3:4.4.10',
     threads=1, workdir='.')
     """
@@ -210,9 +211,10 @@ def test_parse_args() -> None:
         no_fastqc=False,
         no_multiqc=False,
         quiet=False,
-        salmon_index_extra="--keepDuplicates --gencode --perfectHash",
+        salmon_index_extra="--keepDuplicates --gencode",
         salmon_quant_extra=(
-            "--numBootstraps 100 --validateMappings " "--gcBias --seqBias"
+            "--numBootstraps 100 --validateMappings "
+            "--gcBias --seqBias --posBias"
         ),
         singularity="docker://continuumio/miniconda3:4.4.10",
         threads=1,
@@ -240,9 +242,9 @@ def args_to_dict(args: argparse.ArgumentParser) -> Dict[str, Any]:
     {'cold_storage': [' '],
      'design': 'design.tsv',
      'params': {'libType': 'A',
-      'salmon_index_extra': '--keepDuplicates --gencode --perfectHash',
+      'salmon_index_extra': '--keepDuplicates --gencode',
       'salmon_quant_extra':
-        '--numBootstraps 100 --validateMappings --gcBias --seqBias'},
+        '--numBootstraps 100 --validateMappings --gcBias --seqBias --posBias'},
      'ref': {'fasta': '/path/to/fasta', 'gtf': None},
      'singularity_docker_image': 'docker://continuumio/miniconda3:4.4.10',
      'threads': 1,

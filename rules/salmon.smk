@@ -7,11 +7,11 @@ https://snakemake-wrappers.readthedocs.io/en/stable/wrappers/salmon/index.html
 """
 rule salmon_index:
     input:
-        fasta = refs_pack_dict['fasta']
+        sequences = refs_pack_dict['fasta']
     output:
         index = directory("salmon_index/genome_index")
     message:
-        "Indexing {input.fasta} with Salmon"
+        "Indexing {input.sequences} with Salmon"
     resources:
         mem_mb = (
             lambda wildcards, attempt: attempt * 2048 + 10240
@@ -58,7 +58,7 @@ rule salmon_quant:
         min(config["threads"], 12)
     params:
         libType = config["params"].get("libType", "A"),
-        extra = salmon_quant_extra(config)
+        extra = config["params"].get("salmon_quant_extra", "")
     log:
         "logs/salmon/quant_{sample}.log"
     wrapper:

@@ -37,7 +37,7 @@ PYTEST_ARGS      = -vv
 ENV_NAME         = rna-count-salmon
 SNAKE_THREADS    = 1
 SAINDEX_ARGS     = ' --kmerLen 5 '
-SAQUANT_ARGS     = ' --noBiasLengthThreshold --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection --fasterMapping --noFragLengthDist --allowDovetail --numPreAuxModelSamples 0 --numAuxModelSamples 0 '
+SAQUANT_ARGS     = ' --noBiasLengthThreshold --noFragLengthDist --noSingleFragProb --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection '
 
 # Recipes
 default: quantification-report.html

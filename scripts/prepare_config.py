@@ -128,7 +128,7 @@ def parser() -> argparse.ArgumentParser:
         "--salmon-index-extra",
         help="Extra parameters for salmon index step (default: %(default)s)",
         type=str,
-        default="--keepDuplicates --gencode --perfectHash",
+        default="--keepDuplicates --gencode",
     )
 
     main_parser.add_argument(

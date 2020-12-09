@@ -69,7 +69,8 @@ rule tr2gene:
         True
     params:
         header = True,
-        positions = True
+        positions = True,
+        drop_patches = False
     log:
         "logs/transcript_to_gene.log"
     wrapper:

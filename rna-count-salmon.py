@@ -261,7 +261,7 @@ def report(cmd_line_args) -> None:
         opt=cmd_line_args.snakemake_args,
         use_profile=not cmd_line_args.no_profile,
         make_report=True,
-        use_cache=not cmd_line_args.no_cache
+        use_cache=cmd_line_args.cache
     )
 
     run_cmd(*command)

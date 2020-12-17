@@ -40,7 +40,7 @@ SAINDEX_ARGS     = ' --kmerLen 5 '
 SAQUANT_ARGS     = ' --noBiasLengthThreshold --noFragLengthDist --noSingleFragProb --minAssignedFrags 1 --noEffectiveLengthCorrection --noLengthCorrection '
 
 # Recipes
-default: quantification-report.html
+default: all-unit-tests
 
 
 conda-install-flamingo:

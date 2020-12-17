@@ -36,12 +36,15 @@ try:
 except ImportError:
     scripts_path = Path(os.path.realpath(__file__)).parent / "scripts"
     sys.path.append(str(scripts_path))
-    import prepare_config, prepare_design, common_script_rna_count_salmon
+    import prepare_config
+    import prepare_design
+    import common_script_rna_count_salmon
 except ModuleNotFoundError:
     scripts_path = Path(os.path.realpath(__file__)).parent / "scripts"
     sys.path.append(str(scripts_path))
-    import prepare_config, prepare_design, common_script_rna_count_salmon
-
+    import prepare_config
+    import prepare_design
+    import common_script_rna_count_salmon
 
 
 def parser() -> argparse.ArgumentParser:
@@ -80,6 +83,7 @@ def parser() -> argparse.ArgumentParser:
         type=str,
         default=""
     )
+
     snake.add_argument(
         "--no-profile",
         help="Do not activate snakemake profile. This means you have to "
@@ -88,6 +92,7 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False
     )
+
     snake.add_argument(
         "--cache",
         help="Use the shared cache that allows user not to re-run "
@@ -96,12 +101,14 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False
     )
+
     snake.set_defaults(func=snakemake_run)
 
     report_parser = subparsers.add_parser(
         "report",
         add_help=True
     )
+
     report_parser.add_argument(
         "--snakemake-args",
         help="Snakemake arguments. If you use this wrapper instead "
@@ -110,6 +117,7 @@ def parser() -> argparse.ArgumentParser:
         type=str,
         default=""
     )
+
     report_parser.add_argument(
         "--no-profile",
         help="Do not activate snakemake profile. This means you have to "
@@ -118,6 +126,7 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False
     )
+
     report_parser.add_argument(
         "--cache",
         help="Use the shared cache that allows user not to re-run "
@@ -131,6 +140,7 @@ def parser() -> argparse.ArgumentParser:
         "flamingo",
         add_help=True
     )
+
     igr.add_argument(
         "--fastqdir",
         help="Path to fastq files directory (default: %(default)s)",
@@ -138,6 +148,7 @@ def parser() -> argparse.ArgumentParser:
         metavar="FQ-DIR",
         default=os.getcwd()
     )
+
     igr.set_defaults(func=igr_run)
 
     report_parser.set_defaults(func=report)
@@ -153,16 +164,6 @@ def parse_args(args: Any) -> argparse.ArgumentParser:
 
     Return
                 ArgumentParser   A object designed to parse the command line
-
-    Example:
-    >>> parse_args(shlex.split("/path/to/fasta --no-fastqc"))
-    Namespace(aggregate=False, cold_storage=[' '], debug=False,
-    design='design.tsv', fasta='/path/to/fasta', gtf=None, libType='A',
-    no_fastqc=False, no_multiqc=False, quiet=False, salmon_index_extra='
-    --keepDuplicates --gencode --perfectHash', salmon_quant_extra='
-    --numBootstraps 100 --validateMappings --gcBias --seqBias',
-    singularity='docker://continuumio/miniconda3:4.4.10',
-    threads=1, workdir='.')
     """
     return parser().parse_args(args)
 
@@ -227,7 +228,6 @@ def check_env() -> bool:
     return test_if_none and test_if_exists
 
 
-
 def run_cmd(*cmd_line) -> None:
     """
     Run a provided command line
@@ -238,6 +238,7 @@ def run_cmd(*cmd_line) -> None:
         shell(cmd_line)
     else:
         print("Environment was not suitable for this pipeline to run.")
+
 
 def snakemake_run(cmd_line_args) -> None:
     """
@@ -285,6 +286,8 @@ def igr_run(cmd_line_args) -> None:
             "--cold-storage /mnt/isilon /mnt/archivage",
         ]
         run_cmd(*config_cmd)
+    else:
+        print("config.yaml already exists, it was *not* overwritten.")
 
     design_path = "design.tsv"
     if not os.path.exists(design_path):
@@ -297,13 +300,14 @@ def igr_run(cmd_line_args) -> None:
             "--debug"
         ]
         run_cmd(*design_cmd)
+    else:
+        print("design.tsv already exists, it was *not* overwritten.")
 
     snakemake_cmd = ["python3", os.getenv("RNA_COUNT_LAUNCHER"), "snakemake"]
     run_cmd(*snakemake_cmd)
 
     report_cmd = ["python3", os.getenv("RNA_COUNT_LAUNCHER"), "report"]
     run_cmd(*report_cmd)
-
 
 
 if __name__ == '__main__':

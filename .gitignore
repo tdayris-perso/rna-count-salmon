@@ -10,7 +10,7 @@ tests/*.png
 tests/*.html
 tests/*.stats*
 tests/salmon_index/
-*/__pycache__/*
+*__pycache__*
 *.pytest_cache*
 logs/*
 tests/design.tsv

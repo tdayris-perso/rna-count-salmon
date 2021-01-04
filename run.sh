@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eui
 
-CONDA_YAML = "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
+CONDA_YAML="/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
 
 # This function only changes echo headers
 # for user's sake.

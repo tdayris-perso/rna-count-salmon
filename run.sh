@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eui
 
+CONDA_YAML = "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
+
 # This function only changes echo headers
 # for user's sake.
 function message() {
@@ -44,7 +46,10 @@ function error_handling() {
 }
 
 function help_message() {
-  message DOC "Hi, thanks for using me as your script for running "
+  message DOC "Hi, I'm functionnal only at IGR's Flamingo. Do not try to run "
+  message DOC "me elsewhere. I won't work."
+  echo ""
+  message DOC "Thanks for using me as your script for running "
   message DOC "rna-count-salmon I'm very proud to be your script today,"
   message DOC "and I hope you'll enjoy working with me."
   echo ""
@@ -72,8 +77,8 @@ source "$(conda info --base)/etc/profile.d/conda.sh" && conda activate || exit e
 
 # Install conda environment if not installed before
 message INFO "Installing environment if and only if this action is needed."
-$(conda info --envs | grep "rna-count-salmon" > "/dev/null") && message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
-
+$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "${CONDA_YAML}"
+fi
 # Check on environment variables: if env are missing
 message INFO "Loading 'rna-count-salmon' environment"
 conda activate rna-count-salmon || error_handling "${LINENO}" 2 "Could not activate the environment 'rna-count-salmon'."

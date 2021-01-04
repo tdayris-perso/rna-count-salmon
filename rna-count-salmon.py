@@ -244,8 +244,12 @@ def snakemake_run(cmd_line_args) -> None:
     """
     Call snakemake itself
     """
+    opt_args = cmd_line_args.snakemake_args
+    if not ("--notemp" in opt_args or "--nt" in opt_args):
+        opt_args += " --notemp "
+
     command = snakemake_command(
-        opt=cmd_line_args.snakemake_args,
+        opt=opt_args,
         use_profile=not cmd_line_args.no_profile,
         make_report=False,
         use_cache=not cmd_line_args.no_cache

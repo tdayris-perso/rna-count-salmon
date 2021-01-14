@@ -10,7 +10,7 @@ MAKEFLAGS += --no-builtin-rules
 PYTEST           = pytest
 BASH             = bash
 CONDA            = conda
-PYTHON           = python3.8
+PYTHON           = python3.9
 SNAKEMAKE        = snakemake
 CONDA_ACTIVATE   = source "$$(conda info --base)/etc/profile.d/conda.sh" ; conda activate ; conda activate
 
@@ -46,6 +46,13 @@ default: all-unit-tests
 conda-install-flamingo:
 	${CONDA_ACTIVATE} base && \
 	${CONDA} env create --file ${ENV_FLAMINGO} --force && \
+	${CONDA} activate ${ENV_NAME}
+.PHONY: conda-tests
+
+
+mamba-install-flamingo:
+	${CONDA_ACTIVATE} base && \
+	mamba env create --file ${ENV_FLAMINGO} --force && \
 	${CONDA} activate ${ENV_NAME}
 .PHONY: conda-tests
 

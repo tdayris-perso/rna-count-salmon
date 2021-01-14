@@ -72,10 +72,7 @@ function help_message() {
 [[ $# -gt 0 ]] && help_message
 
 CONDA='conda'
-which mamba
-if [[ $? -eq 0 ]]; then
-  CONDA='mamba'
-fi
+which mamba && CONDA="mamba" || echo "Mamba not found, falling back to conda."
 
 # Loading conda
 message INFO "Sourcing conda for users who did not source it before."

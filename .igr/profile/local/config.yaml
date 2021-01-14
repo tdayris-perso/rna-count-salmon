@@ -12,3 +12,4 @@ conda-prefix: snakemake/conda
 use-singularity: true
 singularity-prefix: snakemake/singularity
 wrapper-prefix: https://raw.githubusercontent.com/tdayris/snakemake-wrappers/Unofficial
+conda-frontend: mamba

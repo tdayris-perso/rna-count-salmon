@@ -71,13 +71,19 @@ function help_message() {
 
 [[ $# -gt 0 ]] && help_message
 
+CONDA='conda'
+which mamba
+if [[ $? -eq 0 ]]; then
+  CONDA='mamba'
+fi
+
 # Loading conda
 message INFO "Sourcing conda for users who did not source it before."
 source "$(conda info --base)/etc/profile.d/conda.sh" && conda activate || exit error_handling "${LINENO}" 1 "Could not source conda environment."
 
 # Install conda environment if not installed before
 message INFO "Installing environment if and only if this action is needed."
-$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || conda env create --force -f "${CONDA_YAML}"
+$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || ${CONDA} env create --force -f "${CONDA_YAML}"
 
 # Check on environment variables: if env are missing
 message INFO "Loading 'rna-count-salmon' environment"

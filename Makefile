@@ -64,6 +64,13 @@ conda-install-local:
 .PHONY: conda-tests
 
 
+mamba-install-local:
+	${CONDA_ACTIVATE} base && \
+	mamba env create --file ${ENV_LOCAL} --force && \
+	${CONDA} activate ${ENV_NAME}
+.PHONY: conda-tests
+
+
 config.yaml:
 	${CONDA_ACTIVATE} ${ENV_NAME} && ${CONFIG_CALL} ${FASTA} ${GTF} --debug
 

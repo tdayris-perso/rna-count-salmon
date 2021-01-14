@@ -15,3 +15,4 @@ conda-prefix: /mnt/beegfs/pipelines/rna-count-salmon/conda
 use-singularity: true
 singularity-prefix: /mnt/beegfs/pipelines/rna-count-salmon/singularity
 wrapper-prefix: https://raw.githubusercontent.com/tdayris/snakemake-wrappers/Unofficial
+conda-frontend: mamba

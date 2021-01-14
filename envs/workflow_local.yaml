@@ -20,7 +20,7 @@ dependencies:
   - conda-forge::ipython==7.19.0
   - conda-forge::bashlex==0.15
   - conda-forge::black==20.8b1
-  - conda-forge::singularity==3.6.4
+  - conda-forge::singularity==3.5.3
   - conda-forge::mamba==0.7.6
 variables:
   PIPELINE_PREFIX: "/home/tdayris/Documents/Developments/rna-count-salmon"

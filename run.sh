@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eui
+set -ei
 
 CONDA_YAML="/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
 

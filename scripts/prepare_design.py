@@ -298,6 +298,8 @@ def main(args: argparse.ArgumentParser) -> None:
     """
     # Searching for fastq files and sorting them alphabetically
     fq_files = sorted(list(search_fq(Path(args.path), args.recursive)))
+    if len(fq_files) == 0:
+        raise ValueError("Could not find any Fastq file to process.")
     logging.debug("Head of alphabeticaly sorted list of fastq files:")
     logging.debug([str(i) for i in fq_files[0:5]])
 

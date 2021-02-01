@@ -93,4 +93,4 @@ conda activate rna-count-salmon || error_handling "${LINENO}" 2 "Could not activ
 
 # then installation process did not work properly
 message INFO "Running pipeline if and only if it is possible"
-$(export -p | grep "RNA_COUNT_LAUNCHER" --quiet) && python3 ${RNA_COUNT_LAUNCHER} flamingo || error_handling ${LINENO} 3 "Could not locate rna-count-salmon launcher at: ${RNA_COUNT_LAUNCHER}"
+$(export -p | grep "RNA_COUNT_LAUNCHER" --quiet) && python3 ${RNA_COUNT_LAUNCHER} flamingo || error_handling ${LINENO} 3 "Error while running: ${RNA_COUNT_LAUNCHER}"

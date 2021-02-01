@@ -13,6 +13,8 @@ function message() {
   # Classic switch based on status
   if [ ${status} = INFO ]; then
     echo -e "\033[1;36m@INFO:\033[0m ${message}"
+  elif [ ${status} = WARNING ]; then
+    echo -e "\033[1;33m@WARNING:\033[0m ${message}"
   elif [ ${status} = ERROR ]; then
     echo -e "\033[41m@ERROR:\033[0m ${message}"
   elif [ ${status} = DOC ]; then
@@ -58,6 +60,7 @@ function help_message() {
   message DOC "In fact, I always start my speech with :"
   message DOC "'\033[0;33m@DOC:\033[0m' when i't about my functions,"
   message DOC "'\033[1;36m@INFO:\033[0m' when it's about my intentions, "
+  message DOC "'\033[1;33m@WARNING:\033[0m' for non-critical issues, "
   message DOC "'\033[41m@ERROR:\033[0m', I tell you when things go wrong."
   echo ""
   message DOC "I understand very fiew things, and here they are:"
@@ -72,7 +75,9 @@ function help_message() {
 [[ $# -gt 0 ]] && help_message
 
 CONDA='conda'
-which mamba && CONDA="mamba" || echo "Mamba not found, falling back to conda."
+CONDA_VERSION="$(conda --version)"
+[ "${CONDA_VERSION:?}" = "conda 4.9.2" ] || message WARNING "Your version of conda might not be up to date. Trying anyway with the rest of the pipeline."
+which mamba > /dev/null 2>&1 && CONDA="mamba" || message WARNING "Mamba not found, falling back to conda."
 
 # Loading conda
 message INFO "Sourcing conda for users who did not source it before."
@@ -80,7 +85,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh" && conda activate || exit e
 
 # Install conda environment if not installed before
 message INFO "Installing environment if and only if this action is needed."
-$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || ${CONDA} env create --force -f "${CONDA_YAML}"
+#$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || ${CONDA} env create --force -f "${CONDA_YAML}"
 
 # Check on environment variables: if env are missing
 message INFO "Loading 'rna-count-salmon' environment"

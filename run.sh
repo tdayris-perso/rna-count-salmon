@@ -1,8 +1,6 @@
 #!/bin/bash
 set -ei
 
-CONDA_YAML="/mnt/beegfs/pipelines/rna-count-salmon/pipeline/rna-count-salmon/envs/workflow_flamingo.yaml"
-
 # This function only changes echo headers
 # for user's sake.
 function message() {
@@ -76,6 +74,7 @@ function help_message() {
 
 CONDA='conda'
 CONDA_VERSION="$(conda --version)"
+CONDA_ENV="/mnt/beegfs/pipelines/rna-count-salmon/env"
 [ "${CONDA_VERSION:?}" = "conda 4.9.2" ] || message WARNING "Your version of conda might not be up to date. Trying anyway with the rest of the pipeline."
 which mamba > /dev/null 2>&1 && CONDA="mamba" || message WARNING "Mamba not found, falling back to conda."
 
@@ -83,14 +82,10 @@ which mamba > /dev/null 2>&1 && CONDA="mamba" || message WARNING "Mamba not foun
 message INFO "Sourcing conda for users who did not source it before."
 source "$(conda info --base)/etc/profile.d/conda.sh" && conda activate || exit error_handling "${LINENO}" 1 "Could not source conda environment."
 
-# Install conda environment if not installed before
-message INFO "Installing environment if and only if this action is needed."
-#$(conda info --envs | grep "rna-count-salmon" > "/dev/null" && conda compare -n rna-count-salmon "${CONDA_YAML}") &&  message INFO "Pipeline already installed! What a chance!" || ${CONDA} env create --force -f "${CONDA_YAML}"
-
 # Check on environment variables: if env are missing
 message INFO "Loading 'rna-count-salmon' environment"
-conda activate rna-count-salmon || error_handling "${LINENO}" 2 "Could not activate the environment 'rna-count-salmon'."
+conda activate ${CONDA_ENV} || error_handling "${LINENO}" 2 "Could not activate the environment for rna-count-salmon."
 
 # then installation process did not work properly
 message INFO "Running pipeline if and only if it is possible"
-$(export -p | grep "RNA_COUNT_LAUNCHER" --quiet) && python3 ${RNA_COUNT_LAUNCHER} flamingo || error_handling ${LINENO} 3 "Error while running: ${RNA_COUNT_LAUNCHER}"
+$(export -p | grep "RNA_COUNT_LAUNCHER" --quiet) && python3 ${RNA_COUNT_LAUNCHER:?} flamingo || error_handling ${LINENO} 3 "Error while running: ${RNA_COUNT_LAUNCHER}"

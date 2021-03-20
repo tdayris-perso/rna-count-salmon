@@ -20,7 +20,7 @@ except ImportError:
 requirements = [
     "conda",
     "datrie ==0.8.2",
-    "jinja2 ==2.11.2",
+    "jinja2 ==2.11.3",
     "flask ==1.1.2",
     "pandas ==1.0.3",
     "snakemake ==5.19.3",
